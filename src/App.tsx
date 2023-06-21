@@ -1,14 +1,16 @@
 import React from 'react';
-import PrimarySearchAppBar from './components/Navbar/navbar';
-import NavTabs from './components/Navbar/navbar';
-import BasicCard from './pages/Login/login';
+
+import NavBars from './components/Navbar/navbar';
+import { Outlet } from '@mui/icons-material';
+
+
+
 
 
 function App() {
   return (
     <>
-      <NavTabs></NavTabs>
-      <BasicCard></BasicCard>
+      <NavBars></NavBars>
     </>
   );
 }

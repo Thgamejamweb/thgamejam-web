@@ -5,14 +5,18 @@ import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
+
 interface LinkTabProps {
   label?: string;
   href?: string;
 }
 
+
+
+
 function LinkTab(props: LinkTabProps) {
   return (
-    <Tab
+    <Tab sx={{height:70}}
       component="a"
       onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         event.preventDefault();
@@ -22,7 +26,7 @@ function LinkTab(props: LinkTabProps) {
   );
 }
 
-export default function NavTabs() {
+export default function NavBars() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -30,10 +34,10 @@ export default function NavTabs() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
+    <Box sx={{ width: '100%',height:70 }}>
+      <Grid container>
+        <Grid item xs={8} >
+          <Tabs sx={{height:70}} value={value} onChange={handleChange} aria-label="nav tabs example">
             <LinkTab label="Page One" href="/drafts" />
             <LinkTab label="Page Two" href="/trash" />
             <LinkTab label="Page Three" href="/spam" />
