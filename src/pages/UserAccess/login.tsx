@@ -7,10 +7,8 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
-
-
-
-
+import { userApi } from '../../utils/api';
+import { LoginRequest } from '@api/api/thgamejam/user/user';
 
 
 interface IJumpToRegister {
@@ -29,14 +27,18 @@ export default function Login({ callback }: IJumpToRegister) {
         console.log(account);
     };
     const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setAccount(e.target.value);
+        setPassword(e.target.value);
     };
     const handleLoginSubmit = (e: any) => {
         // userApi.getUserPublicKey(new GetUserPublicKeyRequest({username:account})).then((req)=>{
         //     console.log(rsa_encrypt(new LoginRequest({username:account,password:password}),req.publicKey))
-        // })
-      
-        
+        // }) 
+        userApi.login(new LoginRequest({
+            username:account,
+            password:password
+        })).then((req)=>{
+            console.log(req);
+        })
     }
     return (
         <Card sx={{ width: 500, height: '100%' }} >
@@ -84,4 +86,8 @@ export default function Login({ callback }: IJumpToRegister) {
 
         </Card>
     );
+}
+
+function rsa_encrypt(arg0: LoginRequest, publicKey: string): any {
+    throw new Error('Function not implemented.');
 }

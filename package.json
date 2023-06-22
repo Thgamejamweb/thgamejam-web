@@ -29,7 +29,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-proto": "./script/generate.bat"
+    "generate-proto": "./script/generate.bat",
+    "submodules-update": "git submodule update --init --recursive",
+    "submodules-upgrade": "git submodule update --remote"
   },
   "eslintConfig": {
     "extends": [
