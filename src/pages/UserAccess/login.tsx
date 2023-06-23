@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
-import { userApi } from '../../utils/api';
-import { LoginRequest } from '@api/api/thgamejam/user/user';
+
+
 
 
 interface IJumpToRegister {
@@ -17,8 +17,9 @@ interface IJumpToRegister {
 
 export default function Login({ callback }: IJumpToRegister) {
 
- 
-    
+
+   
+
     const [account, setAccount] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
@@ -33,12 +34,12 @@ export default function Login({ callback }: IJumpToRegister) {
         // userApi.getUserPublicKey(new GetUserPublicKeyRequest({username:account})).then((req)=>{
         //     console.log(rsa_encrypt(new LoginRequest({username:account,password:password}),req.publicKey))
         // }) 
-        userApi.login(new LoginRequest({
-            username:account,
-            password:password
-        })).then((req)=>{
-            console.log(req);
-        })
+        // userApi.login(new LoginRequest({
+        //     username:account,
+        //     password:password
+        // })).then((req)=>{
+        //     console.log(req);
+        // })
     }
     return (
         <Card sx={{ width: 500, height: '100%' }} >
@@ -55,12 +56,11 @@ export default function Login({ callback }: IJumpToRegister) {
                     <TextField sx={{ mb: 5 }} id="outlined-basic" label="password" variant="standard" onChange={handlePasswordChange} />
                     <Box>
                         <Button sx={{ width: '20%', mb: 3 }} variant="contained" onClick={handleLoginSubmit}>LOGIN</Button>
-
                         <Link
-                            component="button"
+                            href='register'
                             variant="body2"
                             onClick={() => {
-                                callback(true);
+
                             }}
                             sx={{ ml: 3 }}
                         >
@@ -70,7 +70,7 @@ export default function Login({ callback }: IJumpToRegister) {
                     <Divider sx={{ mb: 2 }} />
                     <Box sx={{ mb: 3 }}>
                         <Link
-                            component="button"
+                            href='unknown link'
                             variant="body2"
                             onClick={() => {
                                 console.info("I'm a button.");
@@ -88,6 +88,6 @@ export default function Login({ callback }: IJumpToRegister) {
     );
 }
 
-function rsa_encrypt(arg0: LoginRequest, publicKey: string): any {
-    throw new Error('Function not implemented.');
-}
+// function rsa_encrypt(arg0: LoginRequest, publicKey: string): any {
+//     throw new Error('Function not implemented.');
+// }

@@ -4,6 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import LinkButton from './linkbutton';
 
 
 interface LinkTabProps {
@@ -41,11 +42,11 @@ export default function NavBars() {
                         <LinkTab label="Page One" href="/drafts" />
                         <LinkTab label="Page Two" href="/trash" />
                         <LinkTab label="Page Three" href="/spam" />
-                        <Button variant="text">Text</Button>
                     </Tabs>
                 </Grid>
-                <Grid item xs={4}>
-                    <Button>nihao</Button>
+                <Grid sx={{ display: 'flex', alignItems: 'center' ,justifyContent:'center'}} item xs={4}>
+                    <LinkButton name='Log in' href='/login'></LinkButton>
+                    <LinkButton name='Register' href='/register'></LinkButton>
                 </Grid>
             </Grid>
         </Box>

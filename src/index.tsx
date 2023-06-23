@@ -20,6 +20,7 @@ const router = createBrowserRouter([
     path: 'register',
     element: <UserAccess login={false}></UserAccess>
   }
+
 ]);
 
 const root = ReactDOM.createRoot(
