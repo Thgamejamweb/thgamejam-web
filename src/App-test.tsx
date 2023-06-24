@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = () => {
@@ -20,17 +20,13 @@ const App = () => {
 
     return (
         <Router>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                    {pages.map((page) => {
-                        const PageComponent = lazy(() => import(`./page${page}`));
+            <Routes>
+                {pages.map((page) => {
+                    const PageComponent = React.lazy(() => import(`./page${page}`));
 
-                        return <Route key={page} path={page} element={<PageComponent />} />;
-                    })}
-                </Routes>
-            </Suspense>
+                    return <Route key={page} path={page} element={<PageComponent />} />;
+                })}
+            </Routes>
         </Router>
     );
 };
-
-export default App;
