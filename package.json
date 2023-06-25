@@ -16,12 +16,14 @@
     "antd": "^5.6.3",
     "axios": "^1.4.0",
     "jsencrypt": "^3.3.2",
+    "node-rsa": "^1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "6"
   },
   "devDependencies": {
     "@mui/material": "^5.13.5",
+    "@types/node-rsa": "^1.1.1",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",

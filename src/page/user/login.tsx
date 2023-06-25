@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { UserApi } from "@api/api/thgamejam/user/userApi";
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
 import axios from 'axios';
-import JSEncrypt from 'jsencrypt';
+import NodeRSA from 'node-rsa';
 
 // const onFinish = (values: any) => {
 //     console.log('Success:', values);
@@ -23,15 +23,6 @@ const fromRequest = <T = any>(data: T) => {
 }
 
 
-function encryptData(data: string, publicKey: string): string {
-    const encryptor = new JSEncrypt();
-    encryptor.setPublicKey(publicKey);
-    encryptor.setPadding(JSEncrypt.OAEP_PADDING); // 设置填充方式为OAEP
-
-    const encryptedData = encryptor.encrypt(data);
-    return encryptedData;
-}
-
 const userApi = new UserApi(customSend, fromRequest, fromRequest);
 
 const App: React.FC = () => {
@@ -45,27 +36,24 @@ const App: React.FC = () => {
 
     function submitLogin() {
 
-        //console.log(`email: ${username}, passwd: ${password}`)
-        //取publickey
+
         userApi.getUserPublicKey(new GetUserPublicKeyRequest({
             username: username
         })).then(req => {
-            //if (req.publicKey != null) {
-            //加密password
-            const rsaPassWord = encryptData(password, req.publicKey);//设置公钥
+            const key = new NodeRSA();
+            key.importKey(req.publicKey, 'pkcs8-public'); // 导入PKCS#8格式的公钥
 
-            //console.log(rsaPassWord);
-
+            // 使用加密器加密数据
+            const encryptedData = key.encrypt(password, 'base64');
             //登入
             userApi.login(new LoginRequest({
                 username: username,
-                password: rsaPassWord
-            })).then(req => {
+                password: encryptedData
+            })).then(() => {
                 console.log('sec');
             }).catch(req => {
                 console.log(req);
             })
-            //}
         }).catch(req => {
             console.log(req);
         })
