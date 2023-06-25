@@ -1,10 +1,3 @@
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2023-06-25 00:31:07
- * @LastEditTime: 2023-06-25 00:53:02
- * @LastEditors: github.com/zhiguai
- */
 import { useState } from 'react'
 import reactLogo from '../../assets/react.svg'
 import viteLogo from '/vite.svg'
