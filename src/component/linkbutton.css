@@ -3,15 +3,15 @@
     -moz-box-sizing: border-box;
     transition: all 0.1s ease;
     white-space: nowrap;
-    height: 30px;
+    height: 35px;
     line-height: 26px;
     color: inherit;
     padding: 0 15px;
     border: 2px solid;
     border-color: #dadada;
     text-decoration: none;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 15px;
+    font-weight: 550;
     border-radius: 3px;
 
     margin-left: 10px;

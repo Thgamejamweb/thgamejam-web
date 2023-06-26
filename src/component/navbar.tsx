@@ -17,7 +17,7 @@ interface LinkTabProps {
 
 function LinkTab(props: LinkTabProps) {
     return (
-        <Tab sx={{ height: 70 }}
+        <Tab sx={{ fontSize: 15, fontWeight: 550, height: 60 }}
             component="a"
             onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
                 event.preventDefault();
@@ -32,25 +32,28 @@ export default function NavBar() {
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
-      
+
     };
 
     return (
-        <Box sx={{ width: '100%', height: 70 }}>
+        <Box sx={{ width: '100%', height: 60,borderBottom:1,borderColor:'#DADADA' }}>
             <Grid container>
-                <Grid item xs={8} >
-                    <Tabs sx={{ height: 70 }} value={value} onChange={handleChange} aria-label="nav tabs example">
-                        <LinkTab label="Page One" href="/drafts" />
-                        <LinkTab label="Page Two" href="/trash" />
-                        <LinkTab label="Page Three" href="/spam" />
+                <Grid item xs={2}>
+                    logo
+                </Grid>
+                <Grid item xs={6} >
+                    <Tabs sx={{ height: 60 }} value={value} onChange={handleChange} >
+                        <LinkTab label="upload game" href="/drafts" />
+                        <LinkTab label="gamejams" href="/trash" />
+                        <LinkTab label="user team" href="/spam" />
                     </Tabs>
                 </Grid>
-                <Grid sx={{ display: 'flex', alignItems: 'center' ,justifyContent:'center'}} item xs={4}>
+                <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                     <LinkButton name='Log in' href='/login'></LinkButton>
                     <LinkButton name='Register' href='/register'></LinkButton>
                 </Grid>
             </Grid>
-        </Box>
+        </Box >
 
     );
 }
