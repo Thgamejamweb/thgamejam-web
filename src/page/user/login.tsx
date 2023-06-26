@@ -1,29 +1,25 @@
-import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { UserApi } from "@api/api/thgamejam/user/userApi";
-import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
+import React, {useState} from 'react';
+import {Button, Checkbox, Form, Input} from 'antd';
+import {UserApi} from "@api/api/thgamejam/user/userApi";
+import {GetUserPublicKeyRequest, LoginRequest} from "@api/api/thgamejam/user/user";
 import axios from 'axios';
-import  {JSEncrypt} from 'jsencrypt';
+import {JSEncrypt} from 'jsencrypt';
 
-// const onFinish = (values: any) => {
-//     console.log('Success:', values);
-// };
-
-// const onFinishFailed = (errorInfo: any) => {
-//     console.log('Failed:', errorInfo);
-// };
 
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
     const response = await axios({ method, url, data });
     return response.data;
 };
 
-const fromRequest = <T = any>(data: T) => {
+const fromRespponse = <T = any>(data: T) => {
     return data
 }
 
+const fromRequest= <T = any>(data: T) => {
+    return JSON.stringify(data);
+}
 
-const userApi = new UserApi(customSend, fromRequest, fromRequest);
+const userApi = new UserApi(customSend, fromRequest, fromRespponse);
 
 const App: React.FC = () => {
 
