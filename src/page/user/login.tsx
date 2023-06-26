@@ -21,12 +21,15 @@ const customSend = async <T, R>({ method, url, data }: { method: string, url: st
     return response.data;
 };
 
-const fromRequest = <T = any>(data: T) => {
+const fromRespponse = <T = any>(data: T) => {
     return data
 }
 
+const fromRequest= <T = any>(data: T) => {
+    return JSON.stringify(data);
+}
 
-const userApi = new UserApi(customSend, fromRequest, fromRequest);
+const userApi = new UserApi(customSend, fromRequest, fromRespponse);
 
 
 export default function Login() {
