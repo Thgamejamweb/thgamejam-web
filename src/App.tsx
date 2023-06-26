@@ -1,6 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
+
 const App = () => {
     const [pages, setPages] = useState<string[]>([]);
 
@@ -24,7 +25,6 @@ const App = () => {
                 <Routes>
                     {pages.map((page) => {
                         const PageComponent = lazy(() => import(`./page${page}`));
-
                         return <Route key={page} path={page} element={<PageComponent />} />;
                     })}
                 </Routes>

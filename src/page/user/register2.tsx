@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
+import reactLogo from '../../assets/react.svg'
 import viteLogo from '/vite.svg'
-import '../App.css'
+import '../../App.css'
 
-function Test() {
+function CCC() {
     const [count, setCount] = useState(0)
     console.log('3422432');
     
@@ -23,7 +23,7 @@ function Test() {
                     count is {count}
                 </button>
                 <p>
-                    Edit <code>src/Test.tsx</code> and save to Test HMR
+                    Edit <code>src/CCC.tsx</code> and save to test HMR
                 </p>
             </div>
             <p className="read-the-docs">
@@ -33,4 +33,4 @@ function Test() {
     )
 }
 
-export default Test
+export default CCC

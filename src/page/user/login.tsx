@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { UserApi } from "@api/api/thgamejam/user/userApi";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+
+import { UserApi } from '@api/api/thgamejam/user/userApi';
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
 import axios from 'axios';
-import  {JSEncrypt} from 'jsencrypt';
 
-// const onFinish = (values: any) => {
-//     console.log('Success:', values);
-// };
+import { JSEncrypt } from 'jsencrypt';
+import Topbar from '../../component/topbar';
 
-// const onFinishFailed = (errorInfo: any) => {
-//     console.log('Failed:', errorInfo);
-// };
 
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
     const response = await axios({ method, url, data });
@@ -25,13 +28,21 @@ const fromRequest = <T = any>(data: T) => {
 
 const userApi = new UserApi(customSend, fromRequest, fromRequest);
 
-const App: React.FC = () => {
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+export default function Login() {
 
-    function submitLogin() {
 
+    const [username, setUsername] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+
+    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setUsername(e.target.value);
+        console.log(username);
+    };
+    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setPassword(e.target.value);
+    };
+    const handleLoginSubmit = (e: any) => {
 
         userApi.getUserPublicKey(new GetUserPublicKeyRequest({
             username: username
@@ -43,9 +54,9 @@ const App: React.FC = () => {
             //登入
             userApi.login(new LoginRequest({
                 username: username,
-                password: encryptedData as string
+                password: btoa(encryptedData as string)
             })).then(() => {
-                console.log('sec');
+              
             }).catch(err => {
                 console.log(err);
             })
@@ -53,52 +64,61 @@ const App: React.FC = () => {
             console.log(err);
         })
 
+
     }
-
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            // onFinish={onFinish}
-            // onFinishFailed={onFinishFailed}
-            autoComplete="off"
-        >
-            <Form.Item
-                label="用户名"
-                name="username"
-                rules={[{ required: true, message: '请输入用户名!' }]}
-            >
-                <Input
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </Form.Item>
+        <>
+            <Topbar></Topbar>
+            <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
+                <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
 
-            <Form.Item
-                label="密码"
-                name="password"
-                rules={[{ required: true, message: '请输入密码!' }]}
-            >
-                <Input.Password
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </Form.Item>
 
-            <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-                <Checkbox>请阅读</Checkbox>
-            </Form.Item>
+                    <Card sx={{ width: 500, height: '100%' }} >
+                        <CardContent sx={{ p: '0' }}>
+                            <Box sx={{ height: 75, px: 5, display: 'flex', alignItems: 'center' }}>
+                                <Typography sx={{ m: '0', fontSize: 20, fontWeight: 900, color: '#434343' }} color="text.secondary" gutterBottom>
+                                    login in
+                                </Typography>
+                            </Box>
+                            <Divider />
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button onClick={submitLogin} type="primary" htmlType="submit">
-                    登入
-                </Button>
-            </Form.Item>
-        </Form>
-    )
-};
+                            <Box sx={{ pt: 5, px: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                <TextField sx={{ mb: 3 }} id="outlined-basic" label="account" variant="standard" onChange={handleUsernameChange} />
+                                <TextField sx={{ mb: 5 }} id="outlined-basic" label="password" variant="standard" onChange={handlePasswordChange} />
+                                <Box>
+                                    <Button sx={{ width: '20%', mb: 3 }} variant="contained" onClick={handleLoginSubmit}>LOGIN</Button>
+                                    <Link
+                                        href='register'
+                                        variant="body2"
+                                        onClick={() => {
 
-export default App;
+                                        }}
+                                        sx={{ ml: 3 }}
+                                    >
+                                        register
+                                    </Link>
+                                </Box>
+                                <Divider sx={{ mb: 2 }} />
+                                <Box sx={{ mb: 3 }}>
+                                    <Link
+                                        href='unknown link'
+                                        variant="body2"
+                                        onClick={() => {
+                                            console.info("I'm a button.");
+                                        }}
+                                    >
+                                        forget password?
+                                    </Link>
+                                </Box>
+                            </Box>
+
+                        </CardContent>
+                        <Divider />
+
+                    </Card>
+                </Box>
+            </Box>
+        </>
+    );
+}
+
