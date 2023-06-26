@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import { UserApi } from "@api/api/thgamejam/user/userApi";
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
 import axios from 'axios';
-import NodeRSA from 'node-rsa';
+import  {JSEncrypt} from 'jsencrypt';
 
 // const onFinish = (values: any) => {
 //     console.log('Success:', values);
@@ -30,32 +30,27 @@ const App: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // useEffect(() => {
-    //     console.log('加载');
-    // }, [])
-
     function submitLogin() {
 
 
         userApi.getUserPublicKey(new GetUserPublicKeyRequest({
             username: username
         })).then(req => {
-            const key = new NodeRSA();
-            key.importKey(req.publicKey, 'pkcs8-public'); // 导入PKCS#8格式的公钥
+            const encrypt = new JSEncrypt();
+            encrypt.setPublicKey(req.publicKey);
 
-            // 使用加密器加密数据
-            const encryptedData = key.encrypt(password, 'base64');
+            const encryptedData = encrypt.encrypt(password);
             //登入
             userApi.login(new LoginRequest({
                 username: username,
-                password: encryptedData
+                password: encryptedData as string
             })).then(() => {
                 console.log('sec');
-            }).catch(req => {
-                console.log(req);
+            }).catch(err => {
+                console.log(err);
             })
-        }).catch(req => {
-            console.log(req);
+        }).catch(err => {
+            console.log(err);
         })
 
     }
