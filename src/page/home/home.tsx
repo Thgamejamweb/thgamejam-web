@@ -4,14 +4,18 @@ import Bottombar from "../../component/bottombar";
 
 import { Carousel } from 'antd';
 
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { CompetitionApi } from "@api/api/thgamejam/competition/competitionApi";
 
 
 
 interface ItemInfo {
+    description?: string,
+    staffName?: string,
+    id: number,
     name: string,
     image: string,
-    description: string,
 }
 interface AreaInfo {
     name: string,
@@ -21,6 +25,7 @@ interface SwiperItemInfo {
     item: ItemInfo,
     alt: string,
 }
+
 function ItemCard(item: ItemInfo) {
     return (
         <Card sx={{ height: '250px', width: '250px', mb: 5, bgcolor: '#F4F4F4' }}>
@@ -28,7 +33,7 @@ function ItemCard(item: ItemInfo) {
                 <CardMedia
                     component="img"
                     height="150px"
-                    image="/static/images/cards/contemplative-reptile.jpg"
+                    src={item.image}
                     alt="green iguana"
                 />
                 {/* <Box
@@ -80,7 +85,7 @@ function ItemShowArea(area: AreaInfo) {
                     area.items.slice(idx, end).map((item) => {
                         return (
                             <Grid xs={12 / numEveryColumn} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                <ItemCard name={item.name} image={item.image} description={item.description}></ItemCard>
+                                <ItemCard name={item.name} image={item.image} description={item.description} id={item.id}></ItemCard>
                             </Grid>
                         )
                     })
@@ -155,48 +160,92 @@ function SwiperContent() {
         </Box>
     )
 }
+
+
+
+const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
+    const response = await axios({ method, url, data });
+    return response.data;
+};
+
+const fromRespponse = <T = any>(data: T) => {
+    return data
+}
+
+const fromRequest = <T = any>(data: T) => {
+    return JSON.stringify(data);
+}
+
+const competitionApi = new CompetitionApi(customSend, fromRequest, fromRespponse);
+
 export default function Home() {
 
-    const items: ItemInfo[] = [{
-        name: 'test1',
-        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
-        description: 'test',
-    }, {
-        name: 'test2',
-        image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-        description: 'test',
-    }, {
-        name: 'test3',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    }, {
-        name: 'test4',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    }, {
-        name: 'test5',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    }, {
-        name: 'test6',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    }, {
-        name: 'test7',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    }, {
-        name: 'test8',
-        image: '/static/images/cards/contemplative-reptile.jpg',
-        description: 'test',
-    },]
+    var test: ItemInfo[] = [{
+        id: 1,
+        name: "ad",
+        staffName: "dad",
+        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2",
+        description: "dadad",
+    },{
+        id: 1,
+        name: "ad",
+        staffName: "dad",
+        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2",
+        description: "dadad",
+    }]
+    // const [startCompetitions, setStartCompetitions] = useState<ItemInfo[]>();
+    // const [signUpCompetitions, setSignUpCompetitions] = useState<ItemInfo[]>();
+    // const [endCompetitions, setEndCompetitions] = useState<ItemInfo[]>();
+
+    // competitionApi.getStartCompetitionList(undefined).then((req) => {
+    //     var temp: ItemInfo[] = [];
+    //     req.list.map((competition) => {
+    //         temp.push({
+    //             id: competition.id,
+    //             name: competition.name,
+    //             staffName: competition.staffName,
+    //             image: competition.headerImageURL,
+    //             description: competition.description
+    //         })
+    //     })
+    //     setStartCompetitions(temp);
+    // })
+    // competitionApi.getSignupCompetitionList(undefined).then((req) => {
+    //     var temp: ItemInfo[] = [];
+    //     req.list.map((competition) => {
+    //         temp.push({
+    //             id: competition.id,
+    //             name: competition.name,
+    //             staffName: competition.staffName,
+    //             image: competition.headerImageURL,
+    //             description: competition.description
+    //         })
+    //     })
+    //     setSignUpCompetitions(temp);
+    // })
+    // competitionApi.getEndCompetitionList(undefined).then((req) => {
+    //     var temp: ItemInfo[] = [];
+    //     req.list.map((competition) => {
+    //         temp.push({
+    //             id: competition.id,
+    //             name: competition.name,
+    //             staffName: competition.staffName,
+    //             image: competition.headerImageURL,
+    //             description: competition.description
+    //         })
+    //     })
+    //     setEndCompetitions(temp);
+    // })
+
     return (
         <>
             <NavBar></NavBar>
             <Swiper ></Swiper>
             <Box >
-                <ItemShowArea name='test' items={items}></ItemShowArea>
-                <ItemShowArea name='test' items={items}></ItemShowArea>
+                <ItemShowArea name='start competition' items={test as ItemInfo[]}></ItemShowArea>
+                <ItemShowArea name='sign up competition' items={test as ItemInfo[]}></ItemShowArea>
+                <ItemShowArea name='end competition' items={test as ItemInfo[]}></ItemShowArea>
+                {/* <ItemShowArea name='test' items={items}></ItemShowArea> */}
             </Box>
             <Bottombar></Bottombar>
         </>

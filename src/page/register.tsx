@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import Topbar from '../../component/topbar';
+import Topbar from '../component/topbar';
 
 
 export default function Register() {
