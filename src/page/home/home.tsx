@@ -8,11 +8,6 @@ import React from "react";
 
 
 
-
-
-
-
-
 interface ItemInfo {
     name: string,
     image: string,
@@ -109,17 +104,6 @@ function ItemShowArea(area: AreaInfo) {
 
 function Swiper() {
 
-    const contentStyle: React.CSSProperties = {
-        marginLeft: '200px',
-        marginRight: '200px',
-        marginTop: 0,
-        marginBottom: 0,
-        height: '400px',
-        color: '#fff',
-        lineHeight: '160px',
-        textAlign: 'center',
-        background: '#364d79',
-    };
 
     const onChange = (currentSlide: number) => {
         console.log(currentSlide);
@@ -144,7 +128,6 @@ function SwiperContent() {
                         src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
                         height='80%'
                         width='80%'
-
                     >
                     </Box>
                 </Grid>
