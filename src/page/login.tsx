@@ -13,7 +13,8 @@ import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/u
 import axios from 'axios';
 
 import { JSEncrypt } from 'jsencrypt';
-import Topbar from '../../component/topbar';
+import Topbar from '../component/topbar';
+
 
 
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
@@ -71,11 +72,9 @@ export default function Login() {
     }
     return (
         <>
-            <Topbar></Topbar>
+           <Topbar></Topbar>
             <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
                 <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
-
-
                     <Card sx={{ width: 500, height: '100%' }} >
                         <CardContent sx={{ p: '0' }}>
                             <Box sx={{ height: 75, px: 5, display: 'flex', alignItems: 'center' }}>
