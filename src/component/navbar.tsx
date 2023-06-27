@@ -51,7 +51,7 @@ export default function NavBar() {
                 <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                     <LinkButton name='Log in' href='/login'></LinkButton>
                     <LinkButton name='Register' href='/register'></LinkButton>
-                </Grid>
+                </Grid>             
             </Grid>
         </Box >
 

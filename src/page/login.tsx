@@ -71,11 +71,9 @@ export default function Login() {
     }
     return (
         <>
-            <Topbar></Topbar>
+           <Topbar></Topbar>
             <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
                 <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
-
-
                     <Card sx={{ width: 500, height: '100%' }} >
                         <CardContent sx={{ p: '0' }}>
                             <Box sx={{ height: 75, px: 5, display: 'flex', alignItems: 'center' }}>
