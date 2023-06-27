@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
     }, []);
 
     const importPages = async () => {
-        const modules = import.meta.glob('../page/**/*.tsx');
+        const modules = import.meta.globEager('../page/**/*.tsx');
 
         const pagePaths = Object.keys(modules).map((path) => {
             return path.replace('../page', '').replace('.tsx', '');
@@ -22,9 +22,11 @@ const App = () => {
         <Router>
             <Routes>
                 {pages.map((page) => {
-                    const PageComponent = React.lazy(() => import(`../page${page}.tsx`));
+                    const PageComponent = lazy(() => import(`./page${page}.tsx` /* webpackIgnore: true */));
 
-                    return <Route key={page} path={page} element={<PageComponent />} />;
+                    return (
+                        <Route key={page} path={page} element={<Suspense fallback={<div>Loading...</div>}><PageComponent /></Suspense>} />
+                    );
                 })}
             </Routes>
         </Router>
