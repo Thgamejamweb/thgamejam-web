@@ -13,7 +13,7 @@ import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/u
 import axios from 'axios';
 
 import { JSEncrypt } from 'jsencrypt';
-import Topbar from '../../component/topbar';
+import Topbar from '@/component/topbar';
 
 
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
