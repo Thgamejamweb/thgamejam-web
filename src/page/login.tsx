@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
+import { useNavigate } from 'react-router-dom';
+
 
 import { UserApi } from '@api/api/thgamejam/user/userApi';
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
@@ -15,38 +17,32 @@ import axios from 'axios';
 import { JSEncrypt } from 'jsencrypt';
 import Topbar from '@/component/topbar';
 
-
+//请求
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
     const response = await axios({ method, url, data });
     return response.data;
 };
-
 const fromRespponse = <T = any>(data: T) => {
     return data
 }
-
-const fromRequest= <T = any>(data: T) => {
+const fromRequest = <T = any>(data: T) => {
     return JSON.stringify(data);
 }
-
 const userApi = new UserApi(customSend, fromRequest, fromRespponse);
 
 
 export default function Login() {
-
-
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const navigate = useNavigate();
 
     const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         setUsername(e.target.value);
-        console.log(username);
     };
     const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         setPassword(e.target.value);
     };
     const handleLoginSubmit = (e: any) => {
-
         userApi.getUserPublicKey(new GetUserPublicKeyRequest({
             username: username
         })).then(req => {
@@ -54,12 +50,12 @@ export default function Login() {
             encrypt.setPublicKey(req.publicKey);
 
             const encryptedData = encrypt.encrypt(password);
-            //登入
+
             userApi.login(new LoginRequest({
                 username: username,
-                password: btoa(encryptedData as string)
+                password: encryptedData as string
             })).then(() => {
-              
+                navigate('/index');
             }).catch(err => {
                 console.log(err);
             })
@@ -71,7 +67,7 @@ export default function Login() {
     }
     return (
         <>
-           <Topbar></Topbar>
+            <Topbar></Topbar>
             <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
                 <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
                     <Card sx={{ width: 500, height: '100%' }} >
@@ -91,9 +87,9 @@ export default function Login() {
                                     <Link
                                         href='register'
                                         variant="body2"
-                                        onClick={() => {
+                                        // onClick={() => {
 
-                                        }}
+                                        // }}
                                         sx={{ ml: 3 }}
                                     >
                                         register
