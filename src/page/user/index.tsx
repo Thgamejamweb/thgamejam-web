@@ -40,7 +40,7 @@ export default function Home() {
                             <Grid container>
                                 <Grid item sx={{ padding: '4px 4px' }} xs={12}>
                                     <TextField
-                                        sx={{ width: "100%"}}
+                                        sx={{ width: "100%" }}
                                         id="filled-multiline-flexible"
                                         label="用户描述"
                                         multiline
@@ -76,7 +76,7 @@ export default function Home() {
                                 </Grid>
                             </Grid>
                         </CardContent>
-                        <CardActions sx={{float:"right"}}>
+                        <CardActions sx={{ float: "right" }}>
                             <Button size="small" color="primary">
                                 修改
                             </Button>

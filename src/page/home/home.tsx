@@ -9,10 +9,6 @@ import { competitionApi } from "@/http/http_api";
 
 import './home.css'
 
-
-
-
-
 interface ItemInfo {
     description?: string,
     staffName?: string,
@@ -31,31 +27,22 @@ interface SwiperItemInfo {
 
 function ItemCard(item: ItemInfo) {
     return (
-        <Card sx={{ height: '250px', width: '250px', mb: 5, bgcolor: '#F4F4F4',borderRadius:'5px',borderWidth:'1px',borderStyle:'outset',borderColor:'grey' }}>
-            <CardActionArea sx={{ p: 0, m: 0 }}>
-                <CardMedia
-                    component="img"
-                    height="150px"
-                    src={item.image}
-                    alt="green iguana"
-                    sx={{ objectFit: 'fill', py: 0 }}
-                />
-                {/* <Box
-                    component='img'
-                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
-                    height='150px'
-                    >
-
-                </Box> */}
-                <CardContent sx={{ height: "100px", pl: 0, pt: '3px', pr: 0, bgcolor: '#121212', color: 'white' }}>
-                    <Typography variant="body2" >
-                        {item.staffName}
-                    </Typography>
-                    <Typography sx={{}} gutterBottom variant="h5" component="div">
+        <Card style={{
+            margin: 12,
+            borderRadius: 10,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
+            overflow: 'hidden',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)', // 设置背景颜色的透明度
+        }}>
+            <CardActionArea>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxWidth: 345, height: 200 }} src={item.image} alt="" />
+                </div>
+                <CardContent>
+                    <Typography sx={{color:'white'}} gutterBottom variant="h5" component="h2">
                         {item.name}
                     </Typography>
-
-                    <Typography >
+                    <Typography sx={{color:'rgba(244, 244, 244, 0.8)'}} variant="body2" color="textSecondary" component="p">
                         {item.description}
                     </Typography>
                 </CardContent>
@@ -64,7 +51,6 @@ function ItemCard(item: ItemInfo) {
 
     )
 }
-
 function ItemShowArea(area: AreaInfo) {
 
     const [width, setWidth] = React.useState(window.innerWidth);
@@ -78,15 +64,15 @@ function ItemShowArea(area: AreaInfo) {
     const breakpoint1 = 1680;
     const breakpoint2 = 1460;
     const breakpoint3 = 1200;
-    var items: any = [];
+    const items: any = [];
 
-    var numEveryColumn: number = width > breakpoint1 ? 5 :
+    const numEveryColumn: number = width > breakpoint1 ? 5 :
         width > breakpoint2 ? 4 :
             width > breakpoint3 ? 3 : 2
 
-    for (var idx = 0; idx < area.items.length; idx += numEveryColumn) {
-        var end: number = idx + numEveryColumn > area.items.length ? area.items.length : idx + numEveryColumn;
-        console.log(area.items[idx].image)
+    for (let idx = 0; idx < area.items.length; idx += numEveryColumn) {
+        const end: number = idx + numEveryColumn > area.items.length ? area.items.length : idx + numEveryColumn;
+        //console.log(area.items[idx].image)
         items.push(
             <Grid container>
                 {
@@ -120,8 +106,6 @@ function ItemShowArea(area: AreaInfo) {
 }
 
 function Swiper() {
-
-
     const onChange = (currentSlide: number) => {
         console.log(currentSlide);
     };
@@ -175,52 +159,54 @@ function SwiperContent() {
 
 
 export default function Home() {
-
     const [startCompetitions, setStartCompetitions] = useState<ItemInfo[]>([]);
     const [signUpCompetitions, setSignUpCompetitions] = useState<ItemInfo[]>([]);
     const [endCompetitions, setEndCompetitions] = useState<ItemInfo[]>([]);
 
-    competitionApi.getStartCompetitionList(undefined).then((req) => {
-        var temp: ItemInfo[] = [];
-        req.list.map((competition) => {
-            temp.push({
-                id: competition.id,
-                name: competition.name,
-                staffName: competition.staffName,
-                image: competition.headerImageURL,
-                description: competition.description
+    React.useEffect(() => {
+        competitionApi.getStartCompetitionList(undefined).then((req) => {
+            const temp: ItemInfo[] = [];
+            req.list.map((competition) => {
+                temp.push({
+                    id: competition.id,
+                    name: competition.name,
+                    staffName: competition.staffName,
+                    image: competition.headerImageURL,
+                    description: competition.description
+                })
             })
+            setStartCompetitions(temp);
+        }).catch((err) => {
+            console.log(err);
         })
-        setStartCompetitions(temp);
-    }).catch((err) => {
-        console.log(err);
-    })
-    competitionApi.getSignupCompetitionList(undefined).then((req) => {
-        var temp: ItemInfo[] = [];
-        req.list.map((competition) => {
-            temp.push({
-                id: competition.id,
-                name: competition.name,
-                staffName: competition.staffName,
-                image: competition.headerImageURL,
-                description: competition.description
+        competitionApi.getSignupCompetitionList(undefined).then((req) => {
+            const temp: ItemInfo[] = [];
+            req.list.map((competition) => {
+                temp.push({
+                    id: competition.id,
+                    name: competition.name,
+                    staffName: competition.staffName,
+                    image: competition.headerImageURL,
+                    description: competition.description
+                })
             })
+            setSignUpCompetitions(temp);
         })
-        setSignUpCompetitions(temp);
-    })
-    competitionApi.getEndCompetitionList(undefined).then((req) => {
-        var temp: ItemInfo[] = [];
-        req.list.map((competition) => {
-            temp.push({
-                id: competition.id,
-                name: competition.name,
-                staffName: competition.staffName,
-                image: competition.headerImageURL,
-                description: competition.description
+        competitionApi.getEndCompetitionList(undefined).then((req) => {
+            const temp: ItemInfo[] = [];
+            req.list.map((competition) => {
+                temp.push({
+                    id: competition.id,
+                    name: competition.name,
+                    staffName: competition.staffName,
+                    image: competition.headerImageURL,
+                    description: competition.description
+                })
             })
+            setEndCompetitions(temp);
         })
-        setEndCompetitions(temp);
-    })
+    }, [])
+
 
     return (
         <>
