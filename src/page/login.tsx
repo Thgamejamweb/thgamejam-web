@@ -9,26 +9,12 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 
-
-import { UserApi } from '@api/api/thgamejam/user/userApi';
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
-import axios from 'axios';
 
 import { JSEncrypt } from 'jsencrypt';
 import Topbar from '@/component/topbar';
+import {userApi} from "@/http/http_api.ts";
 
-//请求
-const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
-    const response = await axios({ method, url, data });
-    return response.data;
-};
-const fromRespponse = <T = any>(data: T) => {
-    return data
-}
-const fromRequest = <T = any>(data: T) => {
-    return JSON.stringify(data);
-}
-const userApi = new UserApi(customSend, fromRequest, fromRespponse);
 
 
 export default function Login() {
