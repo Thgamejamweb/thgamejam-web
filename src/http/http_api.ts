@@ -6,6 +6,22 @@ import {TeamApi} from "@api/api/thgamejam/team/teamApi.ts";
 import {WorksApi} from "@api/api/thgamejam/works/worksApi.ts";
 
 
+axios.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        console.log(error.response.status)
+        // 如果响应失败，检查状态码是否为 302 (重定向)
+        if (error.response && error.response.status === 401) {
+            // 跳转到登录页面
+            window.location.assign('/login');
+        }
+        // 如果是其他错误，则抛出错误，以便其他地方处理
+        return Promise.reject(error);
+    }
+);
+
 const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
     const response = await axios({ method, url, data });
     return response.data;
