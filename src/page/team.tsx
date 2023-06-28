@@ -1,16 +1,11 @@
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2023-06-26 21:29:52
- * @LastEditTime: 2023-06-27 20:03:58
- * @LastEditors: github.com/zhiguai
- */
 import { Avatar, Box, Button, Card, CardActions, CardContent, Container, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
-import NavBar from "../../component/navbar";
-import Bottombar from "../../component/bottombar";
+import NavBar from "../component/navbar";
+import Bottombar from "../component/bottombar";
 import React from "react";
 import Item from "antd/es/descriptions/Item";
-
+import { competitionApi, teamApi } from "@/http/http_api";
+import react from "@vitejs/plugin-react-swc";
+import { GetTeamMemberListRequest } from "@api/api/thgamejam/team/team";
 
 function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
     return { name, calories, fat, carbs, protein };
@@ -26,6 +21,15 @@ const rows = [
 
 
 export default function Home() {
+    React.useEffect(() => {
+        teamApi.getTeamMemberList(new GetTeamMemberListRequest({
+            teamId:10
+        })).then(req => {
+            console.log(req);
+        }).catch(req => {
+            console.log(req);
+        })
+    },[])   
     return (
         <>
             <NavBar></NavBar>
