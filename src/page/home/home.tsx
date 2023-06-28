@@ -7,6 +7,8 @@ import { Carousel } from 'antd';
 import React, { useState } from "react";
 import { competitionApi } from "@/http/http_api";
 
+import './home.css'
+
 
 
 
@@ -29,13 +31,14 @@ interface SwiperItemInfo {
 
 function ItemCard(item: ItemInfo) {
     return (
-        <Card sx={{ height: '250px', width: '250px', mb: 5, bgcolor: '#F4F4F4' }}>
+        <Card sx={{ height: '250px', width: '250px', mb: 5, bgcolor: '#F4F4F4',borderRadius:'5px',borderWidth:'1px',borderStyle:'outset',borderColor:'grey' }}>
             <CardActionArea sx={{ p: 0, m: 0 }}>
                 <CardMedia
                     component="img"
                     height="150px"
                     src={item.image}
                     alt="green iguana"
+                    sx={{ objectFit: 'fill', py: 0 }}
                 />
                 {/* <Box
                     component='img'
@@ -44,12 +47,16 @@ function ItemCard(item: ItemInfo) {
                     >
 
                 </Box> */}
-                <CardContent sx={{ height: "100px", pl: 1.5, py: 0, pr: 0 }}>
-                    <Typography gutterBottom variant="h5" component="div">
+                <CardContent sx={{ height: "100px", pl: 0, pt: '3px', pr: 0, bgcolor: '#121212', color: 'white' }}>
+                    <Typography variant="body2" >
+                        {item.staffName}
+                    </Typography>
+                    <Typography sx={{}} gutterBottom variant="h5" component="div">
                         {item.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Lizards adadadadadadadad
+
+                    <Typography >
+                        {item.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -85,8 +92,8 @@ function ItemShowArea(area: AreaInfo) {
                 {
                     area.items.slice(idx, end).map((item) => {
                         return (
-                            <Grid xs={12 / numEveryColumn} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                <ItemCard name={item.name} image={item.image} description={item.description} id={item.id}></ItemCard>
+                            <Grid xs={12 / numEveryColumn} sx={{ display: 'flex', alignItems: 'center' }}>
+                                <ItemCard name={item.name} id={item.id} image={item.image} staffName={item.staffName} description={item.description}></ItemCard>
                             </Grid>
                         )
                     })
@@ -95,16 +102,20 @@ function ItemShowArea(area: AreaInfo) {
         )
     }
     return (
-        <Box sx={{ width: '100%' }}>
-            <Box sx={{ px: '200px', mb: 3 }}>
-                <Typography sx={{ m: '0', fontSize: 20, fontWeight: 900, color: '#434343' }}>
-                    {area.name}Lastest featured games
-                </Typography>
-            </Box>
-            <Box sx={{ px: '200px' }}>
-                {items}
-            </Box>
-        </Box>
+        <Card className="background-area" sx={{ bgcolor: '#121212' }}>
+            {/* <Box sx={{ width: '100%' }}> */}
+            <CardContent>
+                <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ m: '0', fontSize: 20, fontWeight: 600, color: 'white' }}>
+                        {area.name}Lastest featured games
+                    </Typography>
+                </Box>
+                <Box sx={{}}>
+                    {items}
+                </Box>
+            </CardContent>
+            {/* </Box> */}
+        </Card>
     )
 }
 
@@ -181,7 +192,7 @@ export default function Home() {
             })
         })
         setStartCompetitions(temp);
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log(err);
     })
     competitionApi.getSignupCompetitionList(undefined).then((req) => {
@@ -215,7 +226,15 @@ export default function Home() {
         <>
             <NavBar></NavBar>
             <Swiper ></Swiper>
-            <Box >
+            <Box sx={{
+                backgroundColor: 'black',
+                // backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 100 60'%3E%3Cg fill-opacity='0.28'%3E%3Crect fill='%2342B1CC' width='11' height='11'/%3E%3Crect fill='%2337b0cd' x='10' width='11' height='11'/%3E%3Crect fill='%2329aecf' y='10' width='11' height='11'/%3E%3Crect fill='%2314add0' x='20' width='11' height='11'/%3E%3Crect fill='%2300acd1' x='10' y='10' width='11' height='11'/%3E%3Crect fill='%2300aad3' y='20' width='11' height='11'/%3E%3Crect fill='%2300a9d4' x='30' width='11' height='11'/%3E%3Crect fill='%2300a8d6' x='20' y='10' width='11' height='11'/%3E%3Crect fill='%2300a6d7' x='10' y='20' width='11' height='11'/%3E%3Crect fill='%2300a5d9' y='30' width='11' height='11'/%3E%3Crect fill='%2300a3db' x='40' width='11' height='11'/%3E%3Crect fill='%2300a2dc' x='30' y='10' width='11' height='11'/%3E%3Crect fill='%2300a0de' x='20' y='20' width='11' height='11'/%3E%3Crect fill='%23009fe0' x='10' y='30' width='11' height='11'/%3E%3Crect fill='%23009de1' y='40' width='11' height='11'/%3E%3Crect fill='%23009ce3' x='50' width='11' height='11'/%3E%3Crect fill='%23009ae5' x='40' y='10' width='11' height='11'/%3E%3Crect fill='%230099e6' x='30' y='20' width='11' height='11'/%3E%3Crect fill='%230097e8' x='20' y='30' width='11' height='11'/%3E%3Crect fill='%230095ea' x='10' y='40' width='11' height='11'/%3E%3Crect fill='%230094eb' y='50' width='11' height='11'/%3E%3Crect fill='%230092ed' x='60' width='11' height='11'/%3E%3Crect fill='%230090ef' x='50' y='10' width='11' height='11'/%3E%3Crect fill='%23008ef0' x='40' y='20' width='11' height='11'/%3E%3Crect fill='%23008df2' x='30' y='30' width='11' height='11'/%3E%3Crect fill='%23008bf3' x='20' y='40' width='11' height='11'/%3E%3Crect fill='%230089f5' x='10' y='50' width='11' height='11'/%3E%3Crect fill='%230087f6' x='70' width='11' height='11'/%3E%3Crect fill='%230085f7' x='60' y='10' width='11' height='11'/%3E%3Crect fill='%230083f8' x='50' y='20' width='11' height='11'/%3E%3Crect fill='%230081fa' x='40' y='30' width='11' height='11'/%3E%3Crect fill='%23007ffb' x='30' y='40' width='11' height='11'/%3E%3Crect fill='%23007dfc' x='20' y='50' width='11' height='11'/%3E%3Crect fill='%23007bfd' x='80' width='11' height='11'/%3E%3Crect fill='%230079fe' x='70' y='10' width='11' height='11'/%3E%3Crect fill='%230077ff' x='60' y='20' width='11' height='11'/%3E%3Crect fill='%230075ff' x='50' y='30' width='11' height='11'/%3E%3Crect fill='%230072ff' x='40' y='40' width='11' height='11'/%3E%3Crect fill='%230070ff' x='30' y='50' width='11' height='11'/%3E%3Crect fill='%23006eff' x='90' width='11' height='11'/%3E%3Crect fill='%23006bff' x='80' y='10' width='11' height='11'/%3E%3Crect fill='%230069ff' x='70' y='20' width='11' height='11'/%3E%3Crect fill='%230066ff' x='60' y='30' width='11' height='11'/%3E%3Crect fill='%230063ff' x='50' y='40' width='11' height='11'/%3E%3Crect fill='%230061ff' x='40' y='50' width='11' height='11'/%3E%3Crect fill='%23005eff' x='90' y='10' width='11' height='11'/%3E%3Crect fill='%23005bff' x='80' y='20' width='11' height='11'/%3E%3Crect fill='%230058ff' x='70' y='30' width='11' height='11'/%3E%3Crect fill='%230054ff' x='60' y='40' width='11' height='11'/%3E%3Crect fill='%230051ff' x='50' y='50' width='11' height='11'/%3E%3Crect fill='%23004efe' x='90' y='20' width='11' height='11'/%3E%3Crect fill='%23004afc' x='80' y='30' width='11' height='11'/%3E%3Crect fill='%230046fb' x='70' y='40' width='11' height='11'/%3E%3Crect fill='%230042fa' x='60' y='50' width='11' height='11'/%3E%3Crect fill='%23003df8' x='90' y='30' width='11' height='11'/%3E%3Crect fill='%230038f6' x='80' y='40' width='11' height='11'/%3E%3Crect fill='%230033f5' x='70' y='50' width='11' height='11'/%3E%3Crect fill='%23002df3' x='90' y='40' width='11' height='11'/%3E%3Crect fill='%230026f0' x='80' y='50' width='11' height='11'/%3E%3Crect fill='%23191DEE' x='90' y='50' width='11' height='11'/%3E%3C/g%3E%3C/svg%3E\")",
+                // backgroundAttachment: 'fixed',
+                // backgroundSize: 'cover',
+                px: '200px',
+                py: '50px',
+
+            }}>
                 <ItemShowArea name='start competition' items={startCompetitions as ItemInfo[]}></ItemShowArea>
                 <ItemShowArea name='sign up competition' items={signUpCompetitions as ItemInfo[]}></ItemShowArea>
                 <ItemShowArea name='end competition' items={endCompetitions as ItemInfo[]}></ItemShowArea>
