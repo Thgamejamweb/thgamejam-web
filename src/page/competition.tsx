@@ -94,7 +94,7 @@ function Competition(info: CompetitionDetial) {
 
 export default function CompetitionDetails() {
 
-    var info: CompetitionDetial = {
+    const info: CompetitionDetial = {
         startSignUp: "2023-06-28 02:44:14",
         endSignUp: "2023-06-28 02:44:14",
         start: "2023-06-28 02:44:14",
@@ -107,15 +107,14 @@ export default function CompetitionDetails() {
             <NavBar></NavBar>
             <Box sx={{ width: '100%', pt: '150px', pb: '150px', display: 'flex', justifyContent: 'center' }}>
                 <Competition
-                   startSignUp={info.startSignUp}
-                   endSignUp={info.endSignUp}
-                   start={info.start}
-                   end={info.end}
-                   startScore={info.startScore}
-                   endScore={info.endScore}
-                >
-                </Competition>
-            </Box>
+                    startSignUp={info.startSignUp}
+                    endSignUp={info.endSignUp}
+                    start={info.start}
+                    end={info.end}
+                    startScore={info.startScore}
+                    endScore={info.endScore}
+                />
+            </Box >
             <Bottombar></Bottombar>
         </>
     )
