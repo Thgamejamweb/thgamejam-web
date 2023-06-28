@@ -5,8 +5,9 @@ import Bottombar from "../../component/bottombar";
 import { Carousel } from 'antd';
 
 import React, { useState } from "react";
-import axios from "axios";
-import { CompetitionApi } from "@api/api/thgamejam/competition/competitionApi";
+import { competitionApi } from "@/http/http_api";
+
+
 
 
 
@@ -162,89 +163,62 @@ function SwiperContent() {
 }
 
 
-
-const customSend = async <T, R>({ method, url, data }: { method: string, url: string, data: T }): Promise<R> => {
-    const response = await axios({ method, url, data });
-    return response.data;
-};
-
-const fromRespponse = <T = any>(data: T) => {
-    return data
-}
-
-const fromRequest = <T = any>(data: T) => {
-    return JSON.stringify(data);
-}
-
-const competitionApi = new CompetitionApi(customSend, fromRequest, fromRespponse);
-
 export default function Home() {
 
-    var test: ItemInfo[] = [{
-        id: 1,
-        name: "ad",
-        staffName: "dad",
-        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2",
-        description: "dadad",
-    },{
-        id: 1,
-        name: "ad",
-        staffName: "dad",
-        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2",
-        description: "dadad",
-    }]
-    // const [startCompetitions, setStartCompetitions] = useState<ItemInfo[]>();
-    // const [signUpCompetitions, setSignUpCompetitions] = useState<ItemInfo[]>();
-    // const [endCompetitions, setEndCompetitions] = useState<ItemInfo[]>();
+    const [startCompetitions, setStartCompetitions] = useState<ItemInfo[]>([]);
+    const [signUpCompetitions, setSignUpCompetitions] = useState<ItemInfo[]>([]);
+    const [endCompetitions, setEndCompetitions] = useState<ItemInfo[]>([]);
 
-    // competitionApi.getStartCompetitionList(undefined).then((req) => {
-    //     var temp: ItemInfo[] = [];
-    //     req.list.map((competition) => {
-    //         temp.push({
-    //             id: competition.id,
-    //             name: competition.name,
-    //             staffName: competition.staffName,
-    //             image: competition.headerImageURL,
-    //             description: competition.description
-    //         })
-    //     })
-    //     setStartCompetitions(temp);
-    // })
-    // competitionApi.getSignupCompetitionList(undefined).then((req) => {
-    //     var temp: ItemInfo[] = [];
-    //     req.list.map((competition) => {
-    //         temp.push({
-    //             id: competition.id,
-    //             name: competition.name,
-    //             staffName: competition.staffName,
-    //             image: competition.headerImageURL,
-    //             description: competition.description
-    //         })
-    //     })
-    //     setSignUpCompetitions(temp);
-    // })
-    // competitionApi.getEndCompetitionList(undefined).then((req) => {
-    //     var temp: ItemInfo[] = [];
-    //     req.list.map((competition) => {
-    //         temp.push({
-    //             id: competition.id,
-    //             name: competition.name,
-    //             staffName: competition.staffName,
-    //             image: competition.headerImageURL,
-    //             description: competition.description
-    //         })
-    //     })
-    //     setEndCompetitions(temp);
-    // })
+    competitionApi.getStartCompetitionList(undefined).then((req) => {
+        var temp: ItemInfo[] = [];
+        req.list.map((competition) => {
+            temp.push({
+                id: competition.id,
+                name: competition.name,
+                staffName: competition.staffName,
+                image: competition.headerImageURL,
+                description: competition.description
+            })
+        })
+        setStartCompetitions(temp);
+    }).catch((err)=>{
+        console.log(err);
+    })
+    competitionApi.getSignupCompetitionList(undefined).then((req) => {
+        var temp: ItemInfo[] = [];
+        req.list.map((competition) => {
+            temp.push({
+                id: competition.id,
+                name: competition.name,
+                staffName: competition.staffName,
+                image: competition.headerImageURL,
+                description: competition.description
+            })
+        })
+        setSignUpCompetitions(temp);
+    })
+    competitionApi.getEndCompetitionList(undefined).then((req) => {
+        var temp: ItemInfo[] = [];
+        req.list.map((competition) => {
+            temp.push({
+                id: competition.id,
+                name: competition.name,
+                staffName: competition.staffName,
+                image: competition.headerImageURL,
+                description: competition.description
+            })
+        })
+        setEndCompetitions(temp);
+    })
 
     return (
         <>
             <NavBar></NavBar>
             <Swiper ></Swiper>
             <Box >
-                <ItemShowArea name='start competition' items={test as ItemInfo[]}></ItemShowArea>
-                <ItemShowArea name='sign up competition' items={test as ItemInfo[]}></ItemShowArea>
-                <ItemShowArea name='end competition' items={test as ItemInfo[]}></ItemShowArea>
+                <ItemShowArea name='start competition' items={startCompetitions as ItemInfo[]}></ItemShowArea>
+                <ItemShowArea name='sign up competition' items={signUpCompetitions as ItemInfo[]}></ItemShowArea>
+                <ItemShowArea name='end competition' items={endCompetitions as ItemInfo[]}></ItemShowArea>
                 {/* <ItemShowArea name='test' items={items}></ItemShowArea> */}
             </Box>
             <Bottombar></Bottombar>
