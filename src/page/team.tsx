@@ -1,23 +1,30 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../component/navbar";
 import Bottombar from "../component/bottombar";
 import React, { useState } from "react";
 import Item from "antd/es/descriptions/Item";
 import { competitionApi, teamApi, userApi } from "@/http/http_api";
 import react from "@vitejs/plugin-react-swc";
-import { GetTeamMemberListReply, GetTeamMemberListRequest, GetUserAllTeamListReply, GetUserJoinAllTeamListRequest, UserInfo } from "@api/api/thgamejam/team/team";
+import { ChangeTeamNameRequest, CreateTeamRequest, DeleteTeamRequest, GetTeamMemberListReply, GetTeamMemberListRequest, GetUserAllTeamListReply, GetUserJoinAllTeamListRequest, SetTeamMemberRequest, UserInfo } from "@api/api/thgamejam/team/team";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { GetUserIdByNameRequest, GetUserIdInfoReply } from "@api/api/thgamejam/user/user";
+import SnackBar from '@/component/snackbar'
 
 export default function Home() {
     const [list, setList] = useState<GetUserAllTeamListReply>();
     const [teamList, setTeamList] = useState<GetTeamMemberListReply>();
     const [teamName, setTeamName] = useState('');
+    const [addTeamName, setAddTeamName] = useState('');
+    const [teamListStatus, setTeamListStatus] = useState(0);
+    const [teamId, setTeamId] = useState<number>();
     const [openDialogAddUser, setOpenDialogAddUser] = React.useState(false);
+    const [openDialogAddTeam, setOpenDialogAddTeam] = React.useState(false);
     const [searchUserValue, setSearchUserValue] = React.useState('');
     const [searchUser, setSearchUser] = React.useState<GetUserIdInfoReply>();
 
+
+    //队伍列表
     React.useEffect(() => {
         userApi.getUserTokenInfo(undefined).then(req => {
 
@@ -29,8 +36,32 @@ export default function Home() {
                 console.log(req);
             })
         })
-    }, [])
+    }, [teamListStatus])
 
+    //弹窗
+    const [snackbarsState, setSnackbarsState] = React.useState(false);
+    const [snackbarsSeverity, setSnackbarsSeverity] = React.useState<AlertColor>('info');
+    const [snackbarsMessage, setSnackbarsMessage] = React.useState('');
+    const FunSnackbars = (Severity: number, Message: string) => {
+        setSnackbarsMessage(Message);
+        let data: AlertColor;
+        switch (Severity) {
+            case 1:
+                data = 'success';
+                break;
+            case 2:
+                data = 'warning';
+                break;
+            case 3:
+                data = 'error';
+                break;
+            default:
+                data = 'info'
+                break;
+        }
+        setSnackbarsSeverity(data);
+        setSnackbarsState(true);
+    }
 
     //实时更新搜索列表
     React.useEffect(() => {
@@ -38,12 +69,14 @@ export default function Home() {
             name: searchUserValue
         })).then(req => {
             setSearchUser(req)
-        }).catch(req =>{
+        }).catch(req => {
             setSearchUser(undefined);
         })
     }, [searchUserValue])
 
+
     const editTeamBtn = (teamName: string, teamId: number) => {
+        setTeamId(teamId);
         teamApi.getTeamMemberList(new GetTeamMemberListRequest({
             teamId: teamId
         })).then(req => {
@@ -65,6 +98,75 @@ export default function Home() {
             )
     }
 
+    const editTeamNameBtn = () => {
+        teamApi.changeTeamName(new ChangeTeamNameRequest({
+            newName: teamName,
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '修改成功');
+            setTeamListStatus(teamListStatus + 1);
+        }).catch(req => {
+            console.log(req);
+        })
+    }
+
+    const addTeamUserBtn = () => {
+        teamApi.addTeamMember(new SetTeamMemberRequest({
+            userId: searchUser?.id,
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '邀请成功');
+            //关闭弹窗
+            setOpenDialogAddUser(false);
+        }).catch(req => {
+            FunSnackbars(2, '邀请失败');
+        })
+    }
+
+    const deleteTeamUserBtn = (userId: number) => {
+        teamApi.deleteTeamMember(new SetTeamMemberRequest({
+            userId: userId,
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '删除成功');
+            //更新列表
+            teamApi.getTeamMemberList(new GetTeamMemberListRequest({
+                teamId: teamId
+            })).then(req => {
+                setTeamList(req);
+            }).catch(req => {
+                console.log(req);
+            })
+        }).catch(req => {
+            FunSnackbars(2, '删除失败');
+        })
+    }
+
+    const deleteTeamBtn = (teamId: number) => {
+        teamApi.deleteTeam(new DeleteTeamRequest({
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '删除成功');
+            //更新列表
+            setTeamListStatus(teamListStatus + 1);
+        }).catch(req => {
+            FunSnackbars(2, '删除失败');
+        })
+    }
+
+    const addTeamBtn = () => {
+        teamApi.createTeam(new CreateTeamRequest({
+            name: addTeamName
+        })).then(req => {
+            FunSnackbars(1, '创建成功');
+            //关闭弹窗更新列表
+            setOpenDialogAddTeam(false);
+            setTeamListStatus(teamListStatus + 1);
+        }).catch(req => {
+            FunSnackbars(2, '创建失败');
+        })
+    }
+
     const editStatus = () => {
         if (teamName != '') {
             return (
@@ -77,6 +179,7 @@ export default function Home() {
                                         id="outlined-multiline-flexible"
                                         label="点击编辑修改队伍"
                                         value={teamName}
+                                        onChange={(e) => setTeamName(e.target.value)}
                                         multiline
                                         maxRows={4}
                                         sx={{ width: "100%" }}
@@ -88,6 +191,7 @@ export default function Home() {
                                         sx={{ width: '100%', height: '100%' }}
                                         variant="contained"
                                         startIcon={<EditIcon />}
+                                        onClick={() => editTeamNameBtn()}
                                     >
                                         修改队伍名称
                                     </Button>
@@ -110,7 +214,7 @@ export default function Home() {
                                                         </TableCell>
                                                         <TableCell align="right">{row.name}</TableCell>
                                                         <TableCell align="right">
-                                                            <IconButton aria-label="delete">
+                                                            <IconButton onClick={() => deleteTeamUserBtn(row.id)} aria-label="delete">
                                                                 <DeleteIcon />
                                                             </IconButton>
                                                         </TableCell>
@@ -140,11 +244,11 @@ export default function Home() {
                                                 {getSearchUser()}
                                             </DialogContent>
                                             <DialogActions>
-                                                {/* <Button onClick={ClickDialogHeaderImageURLClosen} color="primary">
-                                                    取消
-                                                </Button> */}
                                                 <Button onClick={() => setOpenDialogAddUser(false)} color="primary">
-                                                    确定
+                                                    取消
+                                                </Button>
+                                                <Button onClick={() => addTeamUserBtn()} color="primary">
+                                                    邀请
                                                 </Button>
                                             </DialogActions>
                                         </Dialog>
@@ -160,8 +264,10 @@ export default function Home() {
         }
     }
 
+
     return (
         <>
+            <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <NavBar></NavBar>
             <Box sx={{ height: window.innerHeight - 60 }}>
                 <Container fixed sx={{ marginTop: '24px' }}>
@@ -185,7 +291,7 @@ export default function Home() {
                                             <IconButton onClick={() => editTeamBtn(row.teamName, row.teamId)} aria-label="EditIcon">
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton aria-label="delete">
+                                            <IconButton onClick={() => deleteTeamBtn(row.teamId)} aria-label="delete">
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
@@ -193,6 +299,36 @@ export default function Home() {
                                 ))}
                             </TableBody>
                         </Table>
+                        <Button onClick={() => setOpenDialogAddTeam(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">创建队伍</Button>
+                        {/* 弹窗 */}
+                        <Dialog
+                            fullWidth={true}
+                            maxWidth='sm'
+                            open={openDialogAddTeam}
+                            onClose={() => setOpenDialogAddTeam(false)}
+                            aria-labelledby="form-dialog-title">
+                            <DialogTitle id="form-dialog-title">创建队伍</DialogTitle>
+                            <DialogContent>
+                                <TextField
+                                    id="filled-multiline-flexible"
+                                    label="队伍名称"
+                                    multiline
+                                    maxRows={4}
+                                    onChange={(e) => setAddTeamName(e.target.value)}
+                                    sx={{ width: '100%' }}
+                                    variant="filled"
+                                />
+                                {getSearchUser()}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenDialogAddTeam(false)} color="primary">
+                                    取消
+                                </Button>
+                                <Button onClick={() => addTeamBtn()} color="primary">
+                                    创建
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </TableContainer>
                 </Container>
                 {editStatus()}
