@@ -1,9 +1,11 @@
 import Bottombar from "@/component/bottombar";
 import NavBar from "@/component/navbar";
+import { competitionApi } from "@/http/http_api";
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { Divider } from "antd";
-import { useState } from "react";
+import  React,{ useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { ItemCard } from "./home/home";
 
 
 
@@ -16,7 +18,13 @@ interface CompetitionDetial {
     endScore: string,
     content: string,
 }
-
+interface WorkInfo{
+    teamId:number,
+    teamName:string,
+    workName:string,
+    image:string,
+    description:string,
+}
 
 function CompetitionIntro(info: CompetitionDetial) {
 
@@ -107,7 +115,78 @@ function CompetitionIntro(info: CompetitionDetial) {
 
 
 function WorkCommitedShowArea() {
-    
+
+    const worksCommited:WorkInfo[] = [{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    },{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    },{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    },{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    },{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    },{
+        teamId:1,
+        teamName:'ada',
+        workName:'adad',
+        image:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2',
+        description:'adad'
+    }];
+    const [width, setWidth] = React.useState(window.innerWidth);
+
+    React.useEffect(() => {
+        const handleWindowResize = () => setWidth(window.innerWidth);
+        window.addEventListener("resize", handleWindowResize);
+        return () => window.removeEventListener("resize", handleWindowResize);
+    }, []);
+
+    const breakpoint1 = 1680;
+    const breakpoint2 = 1460;
+    const breakpoint3 = 1200;
+    const items: any = [];
+
+    const numEveryColumn: number = width > breakpoint1 ? 5 :
+        width > breakpoint2 ? 4 :
+            width > breakpoint3 ? 3 : 2
+
+    for (let idx = 0; idx < worksCommited.length; idx += numEveryColumn) {
+        const end: number = idx + numEveryColumn > worksCommited.length ? worksCommited.length : idx + numEveryColumn;
+        //console.log(area.items[idx].image)
+        items.push(
+            <Grid container>
+                {
+                    worksCommited.slice(idx, end).map((work) => {
+                        return (
+                            <Grid xs={12 / numEveryColumn} sx={{ display: 'flex', alignItems: 'center' }}>
+                               <ItemCard id={work.teamId} description={work.description} name={work.teamName} image={work.image} ></ItemCard>
+                            </Grid>
+                        )
+                    })
+                }
+            </Grid>
+        )
+    }
     return (
         <Box sx={{ bgcolor: '#9EBCF0' ,px:'30px'}}>
             <Box sx={{height:'100px',display:'flex',alignItems:'center',color:'white'}}>
@@ -115,7 +194,7 @@ function WorkCommitedShowArea() {
             </Box>
             <Divider style={{marginTop:0}}></Divider>
             <Box>
-                adadad
+                {items}
             </Box>
         </Box>
     )
