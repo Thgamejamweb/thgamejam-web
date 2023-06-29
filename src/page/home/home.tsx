@@ -25,7 +25,7 @@ interface SwiperItemInfo {
     alt: string,
 }
 
-function ItemCard(item: ItemInfo) {
+export function ItemCard(item: ItemInfo) {
     return (
         <Card style={{
             margin: 12,
