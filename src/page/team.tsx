@@ -15,6 +15,7 @@ export default function Home() {
     const [list, setList] = useState<GetUserAllTeamListReply>();
     const [teamList, setTeamList] = useState<GetTeamMemberListReply>();
     const [teamName, setTeamName] = useState('');
+    const [editViewStatus, setEditViewStatus] = useState('');
     const [addTeamName, setAddTeamName] = useState('');
     const [teamListStatus, setTeamListStatus] = useState(0);
     const [teamId, setTeamId] = useState<number>();
@@ -82,6 +83,7 @@ export default function Home() {
         })).then(req => {
             setTeamName(teamName);
             setTeamList(req);
+            setEditViewStatus('true');
         }).catch(req => {
             console.log(req);
         })
@@ -168,7 +170,7 @@ export default function Home() {
     }
 
     const editStatus = () => {
-        if (teamName != '') {
+        if (editViewStatus != '') {
             return (
                 <Container fixed sx={{ marginTop: '24px' }}>
                     <Card variant="outlined">
@@ -177,7 +179,7 @@ export default function Home() {
                                 <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={10}>
                                     <TextField
                                         id="outlined-multiline-flexible"
-                                        label="点击编辑修改队伍"
+                                        label="队伍名称"
                                         value={teamName}
                                         onChange={(e) => setTeamName(e.target.value)}
                                         multiline
