@@ -1,21 +1,131 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, Container, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
 import Bottombar from "../../component/bottombar";
-import React from "react";
+import React, { useState } from "react";
 import Item from "antd/es/descriptions/Item";
-import {  } from "@api/api/thgamejam/team/team";
-import { userApi } from "@/http/http_api";
+import { GetUserAllTeamListReply, RejectJoinTeamRequest, SetTeamMemberRequest } from "@api/api/thgamejam/team/team";
+import { teamApi, userApi } from "@/http/http_api";
+import list from "antd/es/list";
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+import { ChangeDescriptionRequest, ChangePasswordRequest, GetUserIdInfoReply, GetUserInfoByIdRequest, UserInfoReply } from "@api/api/thgamejam/user/user";
+import Password from "antd/es/input/Password";
+import SnackBar from '@/component/snackbar'
 
 export default function Home() {
 
-    React.useEffect(()=>{
+    const [list, setList] = useState<GetUserAllTeamListReply>();
+    const [listStatus, setListStatus] = useState(0);
+    const [userData, setUserData] = useState<UserInfoReply>();
+    const [userId, setUserId] = useState<number>();
+    const [userDataStatus, setUserDataStatus] = useState(0);
+
+    const [changeDescriptionDialog, setChangeDescriptionDialog] = useState(false);
+    const [changePasswordDialog, setChangePasswordDialog] = useState(false);
+    const [oldChangePassword, setOldChangePassword] = useState('');
+    const [changePassword, setChangePassword] = useState('');
+
+    //弹窗
+    const [snackbarsState, setSnackbarsState] = React.useState(false);
+    const [snackbarsSeverity, setSnackbarsSeverity] = React.useState<AlertColor>('info');
+    const [snackbarsMessage, setSnackbarsMessage] = React.useState('');
+    const FunSnackbars = (Severity: number, Message: string) => {
+        setSnackbarsMessage(Message);
+        let data: AlertColor;
+        switch (Severity) {
+            case 1:
+                data = 'success';
+                break;
+            case 2:
+                data = 'warning';
+                break;
+            case 3:
+                data = 'error';
+                break;
+            default:
+                data = 'info'
+                break;
+        }
+        setSnackbarsSeverity(data);
+        setSnackbarsState(true);
+    }
+
+    //用户信息
+    React.useEffect(() => {
         userApi.getUserTokenInfo(undefined).then(req => {
+            setUserId(req.id);
+            userApi.getUserInfoById(new GetUserInfoByIdRequest({
+                userId: req.id
+            })).then(req => {
+                setUserData(req);
+            }).catch(req => {
+                console.log(req);
+            })
+        }).catch(req => {
             console.log(req);
         })
-    },[])
+    }, [userDataStatus])
+
+    //邀请队伍列表
+    React.useEffect(() => {
+        teamApi.getAllRequestTeamList(undefined).then(req => {
+            setList(req);
+        }).catch(req => {
+            console.log(req);
+        })
+    }, [listStatus])
+
+    //加入
+    const RejectJoinTeamBtn = (teamId: number) => {
+        teamApi.rejectJoinTeam(new RejectJoinTeamRequest({
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '成功拒绝');
+            setListStatus(listStatus + 1);
+        }).catch(req => {
+            FunSnackbars(1, '拒绝失败');
+        })
+    }
+    //拒绝
+    const JoinTeamBtn = (userId: number, teamId: number) => {
+        teamApi.joinTeam(new SetTeamMemberRequest({
+            userId: userId,
+            teamId: teamId
+        })).then(req => {
+            FunSnackbars(1, '成功加入');
+            setListStatus(listStatus + 1);
+        }).catch(req => {
+            FunSnackbars(2, '加入失败');
+        })
+    }
+
+    //修改信息
+    const ChangeDescriptionBtn = () => {
+        userApi.changeDescription(new ChangeDescriptionRequest({
+            description: userData?.description
+        })).then(req => {
+            setChangeDescriptionDialog(false);
+            FunSnackbars(1, '修改成功');
+        }).catch(req => {
+            FunSnackbars(2, '修改失败');
+        })
+    }
+    //修改密码
+    const ChangePasswordBtn = () => {
+        userApi.changePassword(new ChangePasswordRequest({
+            oldPassword: oldChangePassword,
+            newPassword: changePassword
+        })).then(req => {
+            setChangePasswordDialog(false);
+            FunSnackbars(1, '修改成功');
+        }).catch(req => {
+            FunSnackbars(2, '修改失败');
+        })
+    }
 
     return (
         <>
+            <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <NavBar></NavBar>
             <Box sx={{ height: window.innerHeight - 60 }}>
                 <Container fixed sx={{ marginTop: '24px' }}>
@@ -33,65 +143,137 @@ export default function Home() {
                                 </Grid>
                                 <Grid item sx={{ paddingLeft: '16px' }} xs={9} sm={11}>
                                     <Typography variant="h6" gutterBottom>
-                                        用户名
+                                        {userData?.name}
                                     </Typography>
                                     <Typography variant="body1" gutterBottom>
-                                        body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                                        unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-                                        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+                                        {userData?.description}
                                     </Typography>
                                 </Grid>
                             </Grid>
                         </CardContent>
-                    </Card>
-                    <Card sx={{ marginTop: '24px' }}>
-                        <CardContent>
-                            <Grid container>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12}>
-                                    <TextField
-                                        sx={{ width: "100%" }}
-                                        id="filled-multiline-flexible"
-                                        label="用户描述"
-                                        multiline
-                                        rows={6}
-                                        // value={}
-                                        // onChange={}
-                                        variant="filled"
-                                    />
-                                </Grid>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
-                                    <TextField
-                                        sx={{ width: "100%" }}
-                                        id="filled-multiline-flexible"
-                                        label="密码"
-                                        multiline
-                                        maxRows={4}
-                                        // value={}
-                                        // onChange={}
-                                        variant="filled"
-                                    />
-                                </Grid>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
-                                    <TextField
-                                        sx={{ width: "100%" }}
-                                        id="filled-multiline-flexible"
-                                        label="重复密码"
-                                        multiline
-                                        maxRows={4}
-                                        // value={}
-                                        // onChange={}
-                                        variant="filled"
-                                    />
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                        <CardActions sx={{ float: "right" }}>
-                            <Button size="small" color="primary">
-                                修改
+                        <CardActions>
+                            <Button onClick={() => setChangeDescriptionDialog(true)} size="small" color="primary">
+                                修改信息
+                            </Button>
+                            <Button onClick={() => setChangePasswordDialog(true)} size="small" color="primary">
+                                修改密码
                             </Button>
                         </CardActions>
                     </Card>
+
+                    <Dialog
+                        fullWidth={true}
+                        maxWidth='sm'
+                        open={changeDescriptionDialog}
+                        onClose={() => setChangeDescriptionDialog(false)}
+                        aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">修改信息</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                sx={{ width: "100%" }}
+                                id="filled-multiline-flexible"
+                                label="用户描述"
+                                multiline
+                                rows={6}
+                                value={userData?.description}
+                                onChange={(e) => setUserData(new UserInfoReply({
+                                    id: userData?.id,
+                                    name: userData?.name,
+                                    avatarImage: userData?.avatarImage,
+                                    isStaff: userData?.isStaff,
+                                    description: e.target.value,
+                                }))}
+                                variant="filled"
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setChangeDescriptionDialog(false)} color="primary">
+                                取消
+                            </Button>
+                            <Button onClick={() => ChangeDescriptionBtn()} color="primary">
+                                修改
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        fullWidth={true}
+                        maxWidth='sm'
+                        open={changePasswordDialog}
+                        onClose={() => setChangePasswordDialog(false)}
+                        aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">修改密码</DialogTitle>
+                        <DialogContent>
+                            <Grid container>
+                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
+                                    <TextField
+                                        sx={{ width: "100%" }}
+                                        id="filled-multiline-flexible"
+                                        label="旧密码"
+                                        type="password"
+                                        multiline
+                                        maxRows={4}
+                                        onChange={(e) => setChangePassword(e.target.value)}
+                                        variant="filled"
+                                    />
+                                </Grid>
+                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
+                                    <TextField
+                                        sx={{ width: "100%" }}
+                                        id="filled-multiline-flexible"
+                                        label="新密码"
+                                        multiline
+                                        type="password"
+                                        maxRows={4}
+                                        onChange={(e) => setOldChangePassword(e.target.value)}
+                                        variant="filled"
+                                    />
+                                </Grid>
+                            </Grid>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setChangePasswordDialog(false)} color="primary">
+                                取消
+                            </Button>
+                            <Button onClick={() => ChangePasswordBtn()} color="primary">
+                                修改
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Container>
+
+                <Container fixed sx={{ marginTop: '24px' }}>
+                    <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell align="right">队名</TableCell>
+                                    <TableCell align="right">操作</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {list?.list && list.list.map((row) => (
+                                    <TableRow key={row.teamId}>
+                                        <TableCell component="th" scope="row">
+                                            {row.teamId}
+                                        </TableCell>
+                                        <TableCell align="right">{row.teamName}</TableCell>
+                                        <TableCell align="right">
+                                            <IconButton onClick={() => JoinTeamBtn(userId as number, row.teamId)} aria-label="EditIcon">
+                                                <CheckIcon />
+                                            </IconButton>
+                                            <IconButton onClick={() => RejectJoinTeamBtn(row.teamId)} aria-label="delete">
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Container>
+
             </Box>
             <Bottombar></Bottombar>
         </>
