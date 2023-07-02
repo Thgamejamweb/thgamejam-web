@@ -3,8 +3,17 @@ import NavBar from "../../component/navbar";
 import Bottombar from "../../component/bottombar";
 import React from "react";
 import Item from "antd/es/descriptions/Item";
+import {  } from "@api/api/thgamejam/team/team";
+import { userApi } from "@/http/http_api";
 
 export default function Home() {
+
+    React.useEffect(()=>{
+        userApi.getUserTokenInfo(undefined).then(req => {
+            console.log(req);
+        })
+    },[])
+
     return (
         <>
             <NavBar></NavBar>
