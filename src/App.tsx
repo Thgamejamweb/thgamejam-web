@@ -14,9 +14,7 @@ const App = () => {
         const pagePaths = Object.keys(modules).map((path) => {
             return path.replace('./page', '').replace('.tsx', '');
         });
-
-        console.log(pagePaths);
-
+        //console.log(pagePaths);
         setPages(pagePaths);
     };
 
