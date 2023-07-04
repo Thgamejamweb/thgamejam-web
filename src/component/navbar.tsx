@@ -2,9 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import LinkButton from './linkbutton';
+import { useHistory } from 'react-router-dom';
 
 
 interface LinkTabProps {
@@ -16,11 +16,12 @@ interface LinkTabProps {
 
 
 function LinkTab(props: LinkTabProps) {
+    const history = useHistory();
     return (
         <Tab sx={{ fontSize: 15, fontWeight: 550, height: 60 }}
             component="a"
             onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                event.preventDefault();
+                history.push(props.href)
             }}
             {...props}
         />
@@ -45,13 +46,13 @@ export default function NavBar() {
                     <Tabs sx={{ height: 60 }} value={value} onChange={handleChange} >
                         <LinkTab label="upload game" href="/drafts" />
                         <LinkTab label="gamejams" href="/trash" />
-                        <LinkTab label="user team" href="/spam" />
+                        <LinkTab label="user team" href="/user/index" />
                     </Tabs>
                 </Grid>
                 <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                     <LinkButton name='Log in' href='/login'></LinkButton>
                     <LinkButton name='Register' href='/register'></LinkButton>
-                </Grid>             
+                </Grid>
             </Grid>
         </Box >
 
