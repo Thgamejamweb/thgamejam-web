@@ -1,16 +1,54 @@
-import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
 import Bottombar from "../../component/bottombar";
 import React, { useState } from "react";
 import Item from "antd/es/descriptions/Item";
-import { GetUserAllTeamListReply, RejectJoinTeamRequest, SetTeamMemberRequest } from "@api/api/thgamejam/team/team";
-import { teamApi, userApi } from "@/http/http_api";
+import { GetUserAllTeamListReply, GetUserJoinAllTeamListRequest, RejectJoinTeamRequest, SetTeamMemberRequest } from "@api/api/thgamejam/team/team";
+import { competitionApi, teamApi, userApi, workApi } from "@/http/http_api";
 import list from "antd/es/list";
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { ChangeDescriptionRequest, ChangePasswordRequest, GetUserIdInfoReply, GetUserInfoByIdRequest, UserInfoReply } from "@api/api/thgamejam/user/user";
 import Password from "antd/es/input/Password";
 import SnackBar from '@/component/snackbar'
+import { CompetitionListReply, GetTeamJoinCompetitionListRequest, GetUserJoinCompetitionListRequest } from "@api/api/thgamejam/competition/competition";
+import { GetWorksByIdRequest, GetWorksListByTeamIdReply, WorksIdRequest } from "@api/api/thgamejam/works/works";
+
+interface ItemInfo {
+    description?: string,
+    staffName?: string,
+    id: number,
+    name: string,
+    image: string,
+}
+
+export function ItemCard(item: ItemInfo) {
+    return (
+        <Card style={{
+            margin: 12,
+            borderRadius: 10,
+            //boxShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
+            overflow: 'hidden',
+            backgroundColor:'black',
+            //backgroundColor: 'rgba(255, 255, 255, 0.08)', // 设置背景颜色的透明度
+        }}>
+            <CardActionArea>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxWidth: 345, height: 200 }} src={item.image} alt="" />
+                </div>
+                <CardContent>
+                    <Typography sx={{ color: 'white' }} gutterBottom variant="h5" component="h2">
+                        {item.name}
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(244, 244, 244, 0.8)' }} variant="body2" color="textSecondary" component="p">
+                        {item.description}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+
+    )
+}
 
 export default function Home() {
 
@@ -19,6 +57,8 @@ export default function Home() {
     const [userData, setUserData] = useState<UserInfoReply>();
     const [userId, setUserId] = useState<number>();
     const [userDataStatus, setUserDataStatus] = useState(0);
+    const [userJoinComList, setUserJoinComList] = useState<CompetitionListReply>();
+    // const [teamJoinWorksList, setTeamJoinWorksList] = useState<Array[GetWorksListByTeamIdReply]>();
 
     const [changeDescriptionDialog, setChangeDescriptionDialog] = useState(false);
     const [changePasswordDialog, setChangePasswordDialog] = useState(false);
@@ -49,6 +89,32 @@ export default function Home() {
         setSnackbarsSeverity(data);
         setSnackbarsState(true);
     }
+
+    //初始化比赛列表
+    React.useEffect(() => {
+        userApi.getUserTokenInfo(undefined).then(req => {
+            competitionApi.getUserJoinCompetitionList(new GetUserJoinCompetitionListRequest({
+                userId: req.id
+            })).then(req => {
+                setUserJoinComList(req);
+            }).catch(req => {
+                console.log(req);
+            })
+
+            // teamApi.getUserJoinAllTeamList(new GetUserJoinAllTeamListRequest({
+            //     userId: req.id
+            // })).then(req => {
+            //     req.list.map((item) =>{
+            //         workApi.getWorksListByTermId(new GetWorksByIdRequest({
+            //             teamId:item.teamId
+            //         })).then(req =>{
+            //             return req;
+            //         })
+            //     })
+            // })
+        });
+
+    }, [userDataStatus])
 
     //用户信息
     React.useEffect(() => {
@@ -240,6 +306,16 @@ export default function Home() {
                             </Button>
                         </DialogActions>
                     </Dialog>
+                </Container>
+
+                <Container fixed sx={{ marginTop: '24px'}}>
+                    {userJoinComList?.list.map((item) => {
+                        return (
+                            <Grid xs={12} sx={{ display: 'flex', alignItems: 'center',margin:'-12px' }}>
+                                <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
+                            </Grid>
+                        )
+                    })}
                 </Container>
 
                 <Container fixed sx={{ marginTop: '24px' }}>
