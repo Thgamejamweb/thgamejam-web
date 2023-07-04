@@ -1,6 +1,6 @@
 import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
-import NavBar from "../component/navbar";
-import Bottombar from "../component/bottombar";
+import NavBar from "../../component/navbar";
+import Bottombar from "../../component/bottombar";
 import React, { useState } from "react";
 import Item from "antd/es/descriptions/Item";
 import { competitionApi, teamApi, userApi } from "@/http/http_api";
