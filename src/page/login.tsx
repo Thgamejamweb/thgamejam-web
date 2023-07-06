@@ -13,7 +13,7 @@ import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/u
 
 import { JSEncrypt } from 'jsencrypt';
 import NavBar from "@/component/navbar";
-import {userApi} from "@/http/http_api.ts";
+import { userApi } from "@/http/http_api.ts";
 
 
 
@@ -55,12 +55,12 @@ export default function Login() {
         <>
             <NavBar></NavBar>
             <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
-                <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ height: 400, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
                     <Card sx={{ width: 500, height: '100%' }} >
                         <CardContent sx={{ p: '0' }}>
                             <Box sx={{ height: 75, px: 5, display: 'flex', alignItems: 'center' }}>
                                 <Typography sx={{ m: '0', fontSize: 20, fontWeight: 900, color: '#434343' }} color="text.secondary" gutterBottom>
-                                    login in
+                                    登 入
                                 </Typography>
                             </Box>
                             <Divider />
@@ -69,35 +69,20 @@ export default function Login() {
                                 <TextField sx={{ mb: 3 }} id="outlined-basic" label="account" variant="standard" onChange={handleUsernameChange} />
                                 <TextField sx={{ mb: 5 }} id="outlined-basic" label="password" variant="standard" onChange={handlePasswordChange} />
                                 <Box>
-                                    <Button sx={{ width: '20%', mb: 3 }} variant="contained" onClick={handleLoginSubmit}>LOGIN</Button>
-                                    <Link
-                                        href='register'
-                                        variant="body2"
-                                        // onClick={() => {
-
-                                        // }}
-                                        sx={{ ml: 3 }}
-                                    >
-                                        register
-                                    </Link>
+                                    <Button sx={{ width: '20%', mb: 3 }} variant="contained" onClick={handleLoginSubmit}>登入</Button>
                                 </Box>
                                 <Divider sx={{ mb: 2 }} />
                                 <Box sx={{ mb: 3 }}>
                                     <Link
-                                        href='unknown link'
+                                        href='register'
                                         variant="body2"
-                                        onClick={() => {
-                                            console.info("I'm a button.");
-                                        }}
+                                        sx={{ float: 'right' }}
                                     >
-                                        forget password?
+                                        注册
                                     </Link>
                                 </Box>
                             </Box>
-
                         </CardContent>
-                        <Divider />
-
                     </Card>
                 </Box>
             </Box>

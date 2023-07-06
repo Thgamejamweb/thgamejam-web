@@ -18,9 +18,14 @@ export default function Bottombar() {
 
     return (
         <footer className={classes.footer}>
-            <Container maxWidth="sm">
-                <Typography variant="body1">My sticky footer can be found here.</Typography>
-                <Typography variant="body2" color="textSecondary">
+            <Container maxWidth="lg">
+                <Typography variant="h6" align="center" gutterBottom>
+                    这里是title
+                </Typography>
+                <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
+                    这里是简介
+                </Typography>
+                <Typography variant="body2" color="textSecondary" align="center">
                     {'Copyright © '}
                     <Link color="inherit" href="https://mui.com/">
                         Your Website
