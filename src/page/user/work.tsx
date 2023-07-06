@@ -1,14 +1,16 @@
-import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
 import Bottombar from "../../component/bottombar";
 import React from "react";
 import Item from "antd/es/descriptions/Item";
 import { Editor } from '@tinymce/tinymce-react';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { teamApi, workApi } from "@/http/http_api";
+import { calculateFileHash, fileApi, teamApi, workApi } from "@/http/http_api";
 import { CreateWorksRequest } from "@api/api/thgamejam/works/works";
 import { useNavigate } from "react-router-dom";
 import SnackBar from '@/component/snackbar';
+import { GetDownloadUrlByStrRequest, GetUploadReply, GetUploadUrlRequest } from "@api/api/thgamejam/file/file";
+import axios from "axios";
 
 export default function Home() {
     //弹窗
@@ -63,7 +65,7 @@ export default function Home() {
         workApi.createWorks(new CreateWorksRequest({
             name: name,
             teamId: teamId,
-            headerImageURL: 'https://img1.imgtp.com/2023/06/20/2sqWClRH.png',
+            headerImageURL: headerImageURL,
             content: content,
             fileId: 0,
             imageUrlList: []
@@ -76,6 +78,55 @@ export default function Home() {
     const handleEditorChange = (content: React.SetStateAction<string>) => {
         setContent(content);
     };
+
+
+
+    // 图片上传函数
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            uploadImage(file);
+        }
+    };
+
+    const uploadImage = (selectedFile: File | undefined) => {
+        if (selectedFile) {
+            calculateFileHash(selectedFile).then(req => {
+                const fileHash = req;
+                setHeaderImageURL('upload');
+                fileApi.getUploadUrl(new GetUploadUrlRequest({
+                    fileName: selectedFile.name as string,
+                    fileSize: selectedFile.size as number,
+                    eTag: fileHash, // 如果有文件哈希值，可以在这里提供
+                })).then(req => {
+                    const { url } = req;
+                    // 使用预签名URL上传文件
+                    axios.put(url, selectedFile, {
+                        headers: {
+                            "Content-Type": selectedFile.type,
+                        },
+                    }).then(req => {
+                        fileApi.getDownloadUrlByTag(new GetDownloadUrlByStrRequest({
+                            info: fileHash
+                        })).then(req => {
+                            // 在此处处理上传成功的逻辑
+                            FunSnackbars(1, '上传成功');
+                            console.log(req.url);
+                            setHeaderImageURL(req.url);
+                        }).catch(req => {
+                            FunSnackbars(2, 'URL获取失败');
+                        });
+                    }).catch(req => {
+                        FunSnackbars(2, '上传失败');
+                    });
+                }).catch(req => {
+                    FunSnackbars(2, '上传地址获取失败');
+                })
+            })
+        }
+    };
+
+
 
     return (
         <>
@@ -109,24 +160,49 @@ export default function Home() {
                                         上传头图
                                     </Button>
                                 </Grid>
-                                <Dialog open={openDialogHeaderImageURL} onClose={ClickDialogHeaderImageURLClosen} aria-labelledby="form-dialog-title">
-                                    <DialogTitle id="form-dialog-title">选择图片</DialogTitle>
+                                <Dialog
+                                    maxWidth='sm'
+                                    fullWidth={true}
+                                    open={openDialogHeaderImageURL}
+                                    onClose={ClickDialogHeaderImageURLClosen}
+                                    aria-labelledby="form-dialog-title">
+                                    <DialogTitle id="form-dialog-title">
+                                        选择图片
+                                    </DialogTitle>
                                     <DialogContent>
-                                        <img style={{ width: "100%" }} src="https://img1.imgtp.com/2023/06/27/c6DJUd0e.jpg" alt="" />
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            sx={{ width: "100%" }}
-                                        >
-                                            选择图片
-                                        </Button>
+                                        {
+                                            headerImageURL != 'upload'
+                                                ?
+                                                <>
+                                                    <img style={{ width: "100%" }} src={headerImageURL} alt="" />
+                                                    <label htmlFor="file-input">
+                                                        <input
+                                                            accept="image/*"
+                                                            id="file-input"
+                                                            multiple={false}
+                                                            type="file"
+                                                            style={{ display: "none" }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                        <Button
+                                                            sx={{ width: '100%', height: '100%' }}
+                                                            variant="contained"
+                                                            component="span"
+                                                            startIcon={<CloudUploadIcon />}
+                                                        >
+                                                            选择图片
+                                                        </Button>
+                                                    </label>
+                                                </>
+                                                :
+                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                    <CircularProgress />
+                                                </div>
+                                        }
                                     </DialogContent>
                                     <DialogActions>
-                                        {/* <Button onClick={ClickDialogHeaderImageURLClosen} color="primary">
-                                            取消
-                                        </Button> */}
                                         <Button onClick={ClickDialogHeaderImageURLClosen} color="primary">
-                                            确定
+                                            关闭
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
