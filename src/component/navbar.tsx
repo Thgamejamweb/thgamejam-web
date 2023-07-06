@@ -4,8 +4,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Grid from '@mui/material/Grid';
 import LinkButton from './linkbutton';
-import { useHistory } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 interface LinkTabProps {
     label?: string;
@@ -13,15 +13,13 @@ interface LinkTabProps {
 }
 
 
-
-
 function LinkTab(props: LinkTabProps) {
-    const history = useHistory();
+    const navigate = useNavigate();
     return (
         <Tab sx={{ fontSize: 15, fontWeight: 550, height: 60 }}
             component="a"
             onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                history.push(props.href)
+                navigate(props.href as string)
             }}
             {...props}
         />

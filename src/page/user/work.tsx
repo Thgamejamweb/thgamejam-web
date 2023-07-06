@@ -1,13 +1,49 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
 import Bottombar from "../../component/bottombar";
 import React from "react";
 import Item from "antd/es/descriptions/Item";
 import { Editor } from '@tinymce/tinymce-react';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { teamApi, workApi } from "@/http/http_api";
+import { CreateWorksRequest } from "@api/api/thgamejam/works/works";
+import { useNavigate } from "react-router-dom";
+import SnackBar from '@/component/snackbar';
 
 export default function Home() {
+    //弹窗
+    const [snackbarsState, setSnackbarsState] = React.useState(false);
+    const [snackbarsSeverity, setSnackbarsSeverity] = React.useState<AlertColor>('info');
+    const [snackbarsMessage, setSnackbarsMessage] = React.useState('');
+    const FunSnackbars = (Severity: number, Message: string) => {
+        setSnackbarsMessage(Message);
+        let data: AlertColor;
+        switch (Severity) {
+            case 1:
+                data = 'success';
+                break;
+            case 2:
+                data = 'warning';
+                break;
+            case 3:
+                data = 'error';
+                break;
+            default:
+                data = 'info'
+                break;
+        }
+        setSnackbarsSeverity(data);
+        setSnackbarsState(true);
+    }
+
+
     const [openDialogHeaderImageURL, setOpenDialogHeaderImageURL] = React.useState(false);
+
+    const [name, setName] = React.useState('');
+    const [headerImageURL, setHeaderImageURL] = React.useState('');
+    const [content, setContent] = React.useState('');
+    const navigate = useNavigate();
+
     const ClickDialogHeaderImageURLOpen = () => {
         setOpenDialogHeaderImageURL(true);
     };
@@ -15,9 +51,36 @@ export default function Home() {
         setOpenDialogHeaderImageURL(false);
     };
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const workId = urlParams.get('workId');
+    const teamId = Number(urlParams.get('teamId') as unknown);
+    if (teamId == 0) {
+        navigate('/index');
+        return;
+    }
+
+    const addWorks = () => {
+        workApi.createWorks(new CreateWorksRequest({
+            name: name,
+            teamId: teamId,
+            headerImageURL: 'https://img1.imgtp.com/2023/06/20/2sqWClRH.png',
+            content: content,
+            fileId: 0,
+            imageUrlList: []
+        })).then(req => {
+            FunSnackbars(1, '添加成功');
+        }).catch(req => {
+            FunSnackbars(2, '添加失败');
+        })
+    }
+    const handleEditorChange = (content: React.SetStateAction<string>) => {
+        setContent(content);
+    };
+
     return (
         <>
             <NavBar></NavBar>
+            <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <Box sx={{ height: window.innerHeight - 60 }}>
                 <Container fixed sx={{ marginTop: '24px' }}>
                     <Card>
@@ -31,6 +94,7 @@ export default function Home() {
                                         maxRows={4}
                                         sx={{ width: "100%" }}
                                         variant="outlined"
+                                        onChange={e => setName(e.target.value)}
                                     />
                                 </Grid>
                                 <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={2}>
@@ -73,8 +137,10 @@ export default function Home() {
                                 //value={this.state.body}
                                 //selector='#tinydemo'
                                 // 这里放入上面注册成功的Tiny API Key
-                                apiKey=''
+                                apiKey='c9xsfs30dnk6exa27xghs44zl6av7syofgfbh9jekewxq01k'
                                 //onChange={this.handleEditorChange}
+                                value={content}
+                                onEditorChange={handleEditorChange}
                                 init={{
                                     //selector: '#tinydemo',
                                     language: 'zh_CN',
@@ -83,13 +149,21 @@ export default function Home() {
                                     elementpath: false,
                                     placeholder: '请输入内容',
                                     menubar: false,
-                                    // 这里我只放了一些我自己使用的toolbar，其他的可以去官网自行查看
-                                    toolbar: ` bold italic forecolor | alignleft aligncenter alignright alignjustify |numlist bullist outdent indent`
+                                    plugins: [
+                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                                    ],
+                                    toolbar: 'undo redo | blocks | ' +
+                                        'bold italic backcolor | alignleft aligncenter ' +
+                                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                                        'removeformat | help',
+                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
                                 }}
                             />
                         </CardContent>
-                        <CardActions sx={{float:"right"}}>
-                            <Button size="small">提交</Button>
+                        <CardActions sx={{ float: "right" }}>
+                            <Button onClick={addWorks} size="small">提交</Button>
                         </CardActions>
                     </Card>
                 </Container>
