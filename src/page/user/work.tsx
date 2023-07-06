@@ -1,6 +1,6 @@
 import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Stack, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
-import Bottombar from "../../component/bottombar";
+import Bottombar from "../../component/footer";
 import React from "react";
 import Item from "antd/es/descriptions/Item";
 import { Editor } from '@tinymce/tinymce-react';

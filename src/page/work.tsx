@@ -1,4 +1,4 @@
-import Bottombar from "@/component/bottombar";
+import Bottombar from "@/component/footer";
 import NavBar from "@/component/navbar";
 import { competitionApi } from "@/http/http_api";
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";

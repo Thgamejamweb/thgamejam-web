@@ -1,6 +1,6 @@
 import { AlertColor, Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
-import Bottombar from "../../component/bottombar";
+import Bottombar from "../../component/footer";
 import React, { useState } from "react";
 import Item from "antd/es/descriptions/Item";
 import { GetUserAllTeamListReply, GetUserJoinAllTeamListRequest, RejectJoinTeamRequest, SetTeamMemberRequest } from "@api/api/thgamejam/team/team";
