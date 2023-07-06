@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import NavBar from "../../component/navbar";
-import Bottombar from "../../component/bottombar";
+import Bottombar from "../../component/footer";
 
 import { Carousel } from 'antd';
 
@@ -39,10 +39,10 @@ export function ItemCard(item: ItemInfo) {
                     <img style={{ maxWidth: 345, height: 200 }} src={item.image} alt="" />
                 </div>
                 <CardContent>
-                    <Typography sx={{color:'white'}} gutterBottom variant="h5" component="h2">
+                    <Typography sx={{ color: 'white' }} gutterBottom variant="h5" component="h2">
                         {item.name}
                     </Typography>
-                    <Typography sx={{color:'rgba(244, 244, 244, 0.8)'}} variant="body2" color="textSecondary" component="p">
+                    <Typography sx={{ color: 'rgba(244, 244, 244, 0.8)' }} variant="body2" color="textSecondary" component="p">
                         {item.description}
                     </Typography>
                 </CardContent>
