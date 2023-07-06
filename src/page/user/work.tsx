@@ -9,7 +9,7 @@ import { calculateFileHash, fileApi, teamApi, workApi } from "@/http/http_api";
 import { CreateWorksRequest } from "@api/api/thgamejam/works/works";
 import { useNavigate } from "react-router-dom";
 import SnackBar from '@/component/snackbar';
-import { GetDownloadUrlByStrRequest, GetUploadReply, GetUploadUrlRequest } from "@api/api/thgamejam/file/file";
+import { GetDownloadUrlByStrRequest, GetDownloadUrlRequest, GetUploadReply, GetUploadUrlRequest } from "@api/api/thgamejam/file/file";
 import axios from "axios";
 
 export default function Home() {
@@ -100,14 +100,15 @@ export default function Home() {
                     eTag: fileHash, // 如果有文件哈希值，可以在这里提供
                 })).then(req => {
                     const { url } = req;
+                    const ImgId = req.id;
                     // 使用预签名URL上传文件
                     axios.put(url, selectedFile, {
                         headers: {
                             "Content-Type": selectedFile.type,
                         },
                     }).then(req => {
-                        fileApi.getDownloadUrlByTag(new GetDownloadUrlByStrRequest({
-                            info: fileHash
+                        fileApi.getDownloadUrlByid(new GetDownloadUrlRequest({
+                            id: ImgId
                         })).then(req => {
                             // 在此处处理上传成功的逻辑
                             FunSnackbars(1, '上传成功');
@@ -202,7 +203,7 @@ export default function Home() {
                                     </DialogContent>
                                     <DialogActions>
                                         <Button onClick={ClickDialogHeaderImageURLClosen} color="primary">
-                                            关闭
+                                            完成
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
