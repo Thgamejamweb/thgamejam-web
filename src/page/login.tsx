@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/user";
 
 import { JSEncrypt } from 'jsencrypt';
-import Topbar from '@/component/topbar';
+import NavBar from "@/component/navbar";
 import {userApi} from "@/http/http_api.ts";
 
 
@@ -53,7 +53,7 @@ export default function Login() {
     }
     return (
         <>
-            <Topbar></Topbar>
+            <NavBar></NavBar>
             <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
                 <Box sx={{ height: 500, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
                     <Card sx={{ width: 500, height: '100%' }} >

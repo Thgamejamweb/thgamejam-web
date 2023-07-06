@@ -112,15 +112,18 @@ export default function Home() {
                         })).then(req => {
                             // 在此处处理上传成功的逻辑
                             FunSnackbars(1, '上传成功');
-                            console.log(req.url);
+                            //console.log(req.url);
                             setHeaderImageURL(req.url);
                         }).catch(req => {
+                            setHeaderImageURL('upload');
                             FunSnackbars(2, 'URL获取失败');
                         });
                     }).catch(req => {
+                        setHeaderImageURL('upload');
                         FunSnackbars(2, '上传失败');
                     });
                 }).catch(req => {
+                    setHeaderImageURL('upload');
                     FunSnackbars(2, '上传地址获取失败');
                 })
             })
