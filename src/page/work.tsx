@@ -107,9 +107,9 @@ export default function Work() {
                     onSwiper={(swiper) => console.log(swiper)}
                     onSlideChange={() => console.log('slide change')}
                 >
-                    {/* {worksDetails.imageUrlList.map((data) =>{
+                    {worksDetails.imageUrlList.map((data) =>{
 
-                    })} */}
+                    })}
                     <SwiperSlide>
                         <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
                             <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
