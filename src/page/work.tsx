@@ -1,8 +1,8 @@
 import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Link, Paper, Stack, TextField, Typography, createStyles, styled } from "@mui/material";
 import NavBar from "@/component/navbar";
 import Bottombar from "@/component/footer";
-import React from "react";
-import { } from "@/http/http_api";
+import React, { useEffect } from "react";
+import { workApi } from "@/http/http_api";
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,6 +17,8 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import Divider from '@material-ui/core/Divider';
+import { WorkDetails, WorksIdRequest } from "@api/api/thgamejam/works/works";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -62,6 +64,34 @@ export default function Work() {
         setSnackbarsState(true);
     }
 
+    
+    const [worksDetails, setWorksDetails] = React.useState<WorkDetails>()
+    //检查参数是否存在不存在重定向
+    const navigate = useNavigate();
+    const urlParams = new URLSearchParams(window.location.search);
+    const workId = Number(urlParams.get('workId') as unknown);
+    useEffect(() => {
+        if (workId === 0) {
+            navigate('/index');
+            return;
+        }
+        workApi.getWorksDetailsById(new WorksIdRequest({
+            worksId: workId
+        })).then(req => {
+            console.log(req);
+            
+            setWorksDetails(req);
+        }).catch(req => {
+            console.log(req);
+            
+            //navigate('/index');
+            //return;
+        })
+    
+    }, [])
+
+
+
     return (
         <>
             <NavBar></NavBar>
@@ -77,26 +107,15 @@ export default function Work() {
                     onSwiper={(swiper) => console.log(swiper)}
                     onSlideChange={() => console.log('slide change')}
                 >
+                    {/* {worksDetails.imageUrlList.map((data) =>{
+
+                    })} */}
                     <SwiperSlide>
                         <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
                             <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
                         </div>
                     </SwiperSlide>
-                    <SwiperSlide>
-                        <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
-                            <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
-                            <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
-                            <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
-                        </div>
-                    </SwiperSlide>
+
                 </Swiper>
             </Container>
             <Container fixed sx={{ marginBottom: '200px' }}>
@@ -104,9 +123,10 @@ export default function Work() {
                     <Grid container spacing={5} className={classes.mainGrid}>
                         <Grid item xs={12} md={8}>
                             <Typography variant="h6" gutterBottom>
-                                [TITLE]
+                                {worksDetails?.teamName}
                             </Typography>
                             <Divider />
+                            {worksDetails?.content}
                             {/* {posts.map((post) => (
                                 <Markdown className={classes.markdown} key={post.substring(0, 40)}>
                                     {post}

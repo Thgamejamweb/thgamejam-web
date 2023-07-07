@@ -6,8 +6,13 @@ import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
     footer: {
+        //置底
+        position: 'fixed',
+        bottom: 0,
+        width: '100%',
+        //默认
         padding: theme.spacing(3, 2),
-        marginTop: 'auto',
+        //marginTop: '200px',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
     },

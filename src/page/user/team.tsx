@@ -10,8 +10,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { GetUserIdByNameRequest, GetUserIdInfoReply } from "@api/api/thgamejam/user/user";
 import SnackBar from '@/component/snackbar'
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+    const navigate = useNavigate();
     const [list, setList] = useState<GetUserAllTeamListReply>();
     const [teamList, setTeamList] = useState<GetTeamMemberListReply>();
     const [teamName, setTeamName] = useState('');
@@ -172,94 +174,92 @@ export default function Home() {
     const editStatus = () => {
         if (editViewStatus != '') {
             return (
-                <Container fixed sx={{ marginTop: '24px' }}>
-                    <Card variant="outlined">
-                        <CardContent>
-                            <Grid container>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={10}>
-                                    <TextField
-                                        id="outlined-multiline-flexible"
-                                        label="队伍名称"
-                                        value={teamName}
-                                        onChange={(e) => setTeamName(e.target.value)}
-                                        multiline
-                                        maxRows={4}
-                                        sx={{ width: "100%" }}
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={2}>
-                                    <Button
-                                        sx={{ width: '100%', height: '100%' }}
-                                        variant="contained"
-                                        startIcon={<EditIcon />}
-                                        onClick={() => editTeamNameBtn()}
-                                    >
-                                        修改队伍名称
-                                    </Button>
-                                </Grid>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12}>
-                                    <TableContainer component={Paper}>
-                                        <Table aria-label="simple table">
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell>头像</TableCell>
-                                                    <TableCell align="right">成员</TableCell>
-                                                    <TableCell align="right">操作</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {teamList?.list.map((row) => (
-                                                    <TableRow key={row.name}>
-                                                        <TableCell component="th" scope="row">
-                                                            <Avatar alt="Remy Sharp" src={row.avatarUrl} />
-                                                        </TableCell>
-                                                        <TableCell align="right">{row.name}</TableCell>
-                                                        <TableCell align="right">
-                                                            <IconButton onClick={() => deleteTeamUserBtn(row.id)} aria-label="delete">
-                                                                <DeleteIcon />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                        <Button onClick={() => setOpenDialogAddUser(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">邀请成员</Button>
-                                        {/* 弹窗 */}
-                                        <Dialog
-                                            fullWidth={true}
-                                            maxWidth='sm'
-                                            open={openDialogAddUser}
-                                            onClose={() => setOpenDialogAddUser(false)}
-                                            aria-labelledby="form-dialog-title">
-                                            <DialogTitle id="form-dialog-title">选择用户</DialogTitle>
-                                            <DialogContent>
-                                                <TextField
-                                                    id="filled-multiline-flexible"
-                                                    label="用户名"
-                                                    multiline
-                                                    maxRows={4}
-                                                    onChange={(e) => setSearchUserValue(e.target.value)}
-                                                    sx={{ width: '100%' }}
-                                                    variant="filled"
-                                                />
-                                                {getSearchUser()}
-                                            </DialogContent>
-                                            <DialogActions>
-                                                <Button onClick={() => setOpenDialogAddUser(false)} color="primary">
-                                                    取消
-                                                </Button>
-                                                <Button onClick={() => addTeamUserBtn()} color="primary">
-                                                    邀请
-                                                </Button>
-                                            </DialogActions>
-                                        </Dialog>
-                                    </TableContainer>
-                                </Grid>
+                <Card variant="outlined" sx={{ marginTop: '24px' }}>
+                    <CardContent>
+                        <Grid container>
+                            <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={10}>
+                                <TextField
+                                    id="outlined-multiline-flexible"
+                                    label="队伍名称"
+                                    value={teamName}
+                                    onChange={(e) => setTeamName(e.target.value)}
+                                    multiline
+                                    maxRows={4}
+                                    sx={{ width: "100%" }}
+                                    variant="outlined"
+                                />
                             </Grid>
-                        </CardContent>
-                    </Card>
-                </Container>
+                            <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={2}>
+                                <Button
+                                    sx={{ width: '100%', height: '100%' }}
+                                    variant="contained"
+                                    startIcon={<EditIcon />}
+                                    onClick={() => editTeamNameBtn()}
+                                >
+                                    修改队伍名称
+                                </Button>
+                            </Grid>
+                            <Grid item sx={{ padding: '4px 4px' }} xs={12}>
+                                <TableContainer component={Paper}>
+                                    <Table aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>头像</TableCell>
+                                                <TableCell align="right">成员</TableCell>
+                                                <TableCell align="right">操作</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {teamList?.list.map((row) => (
+                                                <TableRow key={row.name}>
+                                                    <TableCell component="th" scope="row">
+                                                        <Avatar alt="Remy Sharp" src={row.avatarUrl} />
+                                                    </TableCell>
+                                                    <TableCell align="right">{row.name}</TableCell>
+                                                    <TableCell align="right">
+                                                        <IconButton onClick={() => deleteTeamUserBtn(row.id)} aria-label="delete">
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                    <Button onClick={() => setOpenDialogAddUser(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">邀请成员</Button>
+                                    {/* 弹窗 */}
+                                    <Dialog
+                                        fullWidth={true}
+                                        maxWidth='sm'
+                                        open={openDialogAddUser}
+                                        onClose={() => setOpenDialogAddUser(false)}
+                                        aria-labelledby="form-dialog-title">
+                                        <DialogTitle id="form-dialog-title">选择用户</DialogTitle>
+                                        <DialogContent>
+                                            <TextField
+                                                id="filled-multiline-flexible"
+                                                label="用户名"
+                                                multiline
+                                                maxRows={4}
+                                                onChange={(e) => setSearchUserValue(e.target.value)}
+                                                sx={{ width: '100%' }}
+                                                variant="filled"
+                                            />
+                                            {getSearchUser()}
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => setOpenDialogAddUser(false)} color="primary">
+                                                取消
+                                            </Button>
+                                            <Button onClick={() => addTeamUserBtn()} color="primary">
+                                                邀请
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </TableContainer>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
             )
         } else {
             return null;
@@ -271,70 +271,74 @@ export default function Home() {
         <>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <NavBar></NavBar>
-            <Box sx={{ height: window.innerHeight - 60 }}>
-                <Container fixed sx={{ marginTop: '24px' }}>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell align="right">队名</TableCell>
-                                    <TableCell align="right">操作</TableCell>
+            <Container fixed sx={{ marginTop: '24px', marginBottom: '20%' }}>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell align="right">队名</TableCell>
+                                <TableCell align="right">作品</TableCell>
+                                <TableCell align="right">操作</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {list?.list.map((row) => (
+                                <TableRow key={row.teamId}>
+                                    <TableCell component="th" scope="row">
+                                        {row.teamId}
+                                    </TableCell>
+                                    <TableCell align="right">{row.teamName}</TableCell>
+                                    <TableCell align="right">
+                                        <Button onClick={() => navigate('/user/work?teamId=' + row.teamId)} color="primary">
+                                            创建作品
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => editTeamBtn(row.teamName, row.teamId)} aria-label="EditIcon">
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton onClick={() => deleteTeamBtn(row.teamId)} aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </TableCell>
                                 </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {list?.list.map((row) => (
-                                    <TableRow key={row.teamId}>
-                                        <TableCell component="th" scope="row">
-                                            {row.teamId}
-                                        </TableCell>
-                                        <TableCell align="right">{row.teamName}</TableCell>
-                                        <TableCell align="right">
-                                            <IconButton onClick={() => editTeamBtn(row.teamName, row.teamId)} aria-label="EditIcon">
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => deleteTeamBtn(row.teamId)} aria-label="delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        <Button onClick={() => setOpenDialogAddTeam(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">创建队伍</Button>
-                        {/* 弹窗 */}
-                        <Dialog
-                            fullWidth={true}
-                            maxWidth='sm'
-                            open={openDialogAddTeam}
-                            onClose={() => setOpenDialogAddTeam(false)}
-                            aria-labelledby="form-dialog-title">
-                            <DialogTitle id="form-dialog-title">创建队伍</DialogTitle>
-                            <DialogContent>
-                                <TextField
-                                    id="filled-multiline-flexible"
-                                    label="队伍名称"
-                                    multiline
-                                    maxRows={4}
-                                    onChange={(e) => setAddTeamName(e.target.value)}
-                                    sx={{ width: '100%' }}
-                                    variant="filled"
-                                />
-                                {getSearchUser()}
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={() => setOpenDialogAddTeam(false)} color="primary">
-                                    取消
-                                </Button>
-                                <Button onClick={() => addTeamBtn()} color="primary">
-                                    创建
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </TableContainer>
-                </Container>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <Button onClick={() => setOpenDialogAddTeam(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">创建队伍</Button>
+                    {/* 弹窗 */}
+                    <Dialog
+                        fullWidth={true}
+                        maxWidth='sm'
+                        open={openDialogAddTeam}
+                        onClose={() => setOpenDialogAddTeam(false)}
+                        aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">创建队伍</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                id="filled-multiline-flexible"
+                                label="队伍名称"
+                                multiline
+                                maxRows={4}
+                                onChange={(e) => setAddTeamName(e.target.value)}
+                                sx={{ width: '100%' }}
+                                variant="filled"
+                            />
+                            {getSearchUser()}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDialogAddTeam(false)} color="primary">
+                                取消
+                            </Button>
+                            <Button onClick={() => addTeamBtn()} color="primary">
+                                创建
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </TableContainer>
                 {editStatus()}
-            </Box>
+            </Container>
             <Bottombar></Bottombar>
         </>
     )
