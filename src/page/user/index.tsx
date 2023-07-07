@@ -1,4 +1,4 @@
-import { AlertColor, Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
+import { AlertColor, Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createStyles, makeStyles, styled } from "@mui/material";
 import NavBar from "../../component/navbar";
 import Bottombar from "../../component/footer";
 import React, { useState } from "react";
@@ -12,7 +12,7 @@ import { ChangeDescriptionRequest, ChangePasswordRequest, GetUserIdInfoReply, Ge
 import Password from "antd/es/input/Password";
 import SnackBar from '@/component/snackbar'
 import { CompetitionListReply, GetTeamJoinCompetitionListRequest, GetUserJoinCompetitionListRequest } from "@api/api/thgamejam/competition/competition";
-import { GetWorksByIdRequest, GetWorksListByTeamIdReply, WorksIdRequest } from "@api/api/thgamejam/works/works";
+import { GetAllWorksByUserReply, GetWorksByIdRequest, GetWorksListByTeamIdReply, WorksIdRequest } from "@api/api/thgamejam/works/works";
 
 interface ItemInfo {
     description?: string,
@@ -24,29 +24,33 @@ interface ItemInfo {
 
 export function ItemCard(item: ItemInfo) {
     return (
-        <Card style={{
-            margin: 12,
-            borderRadius: 10,
-            //boxShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
-            overflow: 'hidden',
-            backgroundColor:'black',
-            //backgroundColor: 'rgba(255, 255, 255, 0.08)', // 设置背景颜色的透明度
-        }}>
-            <CardActionArea>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxWidth: 345, height: 200 }} src={item.image} alt="" />
-                </div>
-                <CardContent>
-                    <Typography sx={{ color: 'white' }} gutterBottom variant="h5" component="h2">
-                        {item.name}
-                    </Typography>
-                    <Typography sx={{ color: 'rgba(244, 244, 244, 0.8)' }} variant="body2" color="textSecondary" component="p">
-                        {item.description}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
-
+        <Grid item key={item.id} xs={12} sm={6} md={4}>
+            <Card>
+                <CardActionArea>
+                    <CardMedia
+                        style={{ height: 140 }}
+                        image={item.image}
+                        title="Contemplative Reptile"
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {item.name}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {item.description}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                {/* <CardActions>
+                    <Button size="small" color="primary">
+                        Share
+                    </Button>
+                    <Button size="small" color="primary">
+                        Learn More
+                    </Button>
+                </CardActions> */}
+            </Card>
+        </Grid>
     )
 }
 
@@ -58,7 +62,7 @@ export default function Home() {
     const [userId, setUserId] = useState<number>();
     const [userDataStatus, setUserDataStatus] = useState(0);
     const [userJoinComList, setUserJoinComList] = useState<CompetitionListReply>();
-    // const [teamJoinWorksList, setTeamJoinWorksList] = useState<Array[GetWorksListByTeamIdReply]>();
+    const [teamJoinWorksList, setTeamJoinWorksList] = useState<GetAllWorksByUserReply>();
 
     const [changeDescriptionDialog, setChangeDescriptionDialog] = useState(false);
     const [changePasswordDialog, setChangePasswordDialog] = useState(false);
@@ -101,17 +105,11 @@ export default function Home() {
                 console.log(req);
             })
 
-            // teamApi.getUserJoinAllTeamList(new GetUserJoinAllTeamListRequest({
-            //     userId: req.id
-            // })).then(req => {
-            //     req.list.map((item) =>{
-            //         workApi.getWorksListByTermId(new GetWorksByIdRequest({
-            //             teamId:item.teamId
-            //         })).then(req =>{
-            //             return req;
-            //         })
-            //     })
-            // })
+            workApi.getAllWorksByUserRequest(undefined).then(req => {
+                setTeamJoinWorksList(req)
+            }).catch(req => {
+                console.log(req);
+            })
         });
 
     }, [userDataStatus])
@@ -193,164 +191,176 @@ export default function Home() {
         <>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <NavBar></NavBar>
-            <Box sx={{ height: window.innerHeight - 60 }}>
-                <Container fixed sx={{ marginTop: '24px' }}>
-                    <Card>
-                        <CardContent>
-                            <Grid container>
-                                <Grid item xs={3} sm={1}>
-                                    <Avatar sx={{
-                                        padding: 0,
-                                        width: '100%',
-                                        maxWidth: '120px',
-                                        height: 'auto',
-                                        aspectRatio: '1/1' // 设置宽高比例为1:1，根据需要进行调整
-                                    }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                                </Grid>
-                                <Grid item sx={{ paddingLeft: '16px' }} xs={9} sm={11}>
-                                    <Typography variant="h6" gutterBottom>
-                                        {userData?.name}
-                                    </Typography>
-                                    <Typography variant="body1" gutterBottom>
-                                        {userData?.description}
-                                    </Typography>
-                                </Grid>
+
+            <Container fixed sx={{ marginTop: '24px' }}>
+                <Card>
+                    <CardContent>
+                        <Grid container>
+                            <Grid item xs={3} sm={1}>
+                                <Avatar sx={{
+                                    padding: 0,
+                                    width: '100%',
+                                    maxWidth: '120px',
+                                    height: 'auto',
+                                    aspectRatio: '1/1' // 设置宽高比例为1:1，根据需要进行调整
+                                }} alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
                             </Grid>
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={() => setChangeDescriptionDialog(true)} size="small" color="primary">
-                                修改信息
-                            </Button>
-                            <Button onClick={() => setChangePasswordDialog(true)} size="small" color="primary">
-                                修改密码
-                            </Button>
-                        </CardActions>
-                    </Card>
-
-                    <Dialog
-                        fullWidth={true}
-                        maxWidth='sm'
-                        open={changeDescriptionDialog}
-                        onClose={() => setChangeDescriptionDialog(false)}
-                        aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">修改信息</DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                sx={{ width: "100%" }}
-                                id="filled-multiline-flexible"
-                                label="用户描述"
-                                multiline
-                                rows={6}
-                                value={userData?.description}
-                                onChange={(e) => setUserData(new UserInfoReply({
-                                    id: userData?.id,
-                                    name: userData?.name,
-                                    avatarImage: userData?.avatarImage,
-                                    isStaff: userData?.isStaff,
-                                    description: e.target.value,
-                                }))}
-                                variant="filled"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setChangeDescriptionDialog(false)} color="primary">
-                                取消
-                            </Button>
-                            <Button onClick={() => ChangeDescriptionBtn()} color="primary">
-                                修改
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-
-                    <Dialog
-                        fullWidth={true}
-                        maxWidth='sm'
-                        open={changePasswordDialog}
-                        onClose={() => setChangePasswordDialog(false)}
-                        aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">修改密码</DialogTitle>
-                        <DialogContent>
-                            <Grid container>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
-                                    <TextField
-                                        sx={{ width: "100%" }}
-                                        id="filled-multiline-flexible"
-                                        label="旧密码"
-                                        type="password"
-                                        multiline
-                                        maxRows={4}
-                                        onChange={(e) => setChangePassword(e.target.value)}
-                                        variant="filled"
-                                    />
-                                </Grid>
-                                <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
-                                    <TextField
-                                        sx={{ width: "100%" }}
-                                        id="filled-multiline-flexible"
-                                        label="新密码"
-                                        multiline
-                                        type="password"
-                                        maxRows={4}
-                                        onChange={(e) => setOldChangePassword(e.target.value)}
-                                        variant="filled"
-                                    />
-                                </Grid>
+                            <Grid item sx={{ paddingLeft: '16px' }} xs={9} sm={11}>
+                                <Typography variant="h6" gutterBottom>
+                                    {userData?.name}
+                                </Typography>
+                                <Typography variant="body1" gutterBottom>
+                                    {userData?.description}
+                                </Typography>
                             </Grid>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setChangePasswordDialog(false)} color="primary">
-                                取消
-                            </Button>
-                            <Button onClick={() => ChangePasswordBtn()} color="primary">
-                                修改
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </Container>
+                        </Grid>
+                    </CardContent>
+                    <CardActions>
+                        <Button onClick={() => setChangeDescriptionDialog(true)} size="small" color="primary">
+                            修改信息
+                        </Button>
+                        <Button onClick={() => setChangePasswordDialog(true)} size="small" color="primary">
+                            修改密码
+                        </Button>
+                    </CardActions>
+                </Card>
 
-                <Container fixed sx={{ marginTop: '24px'}}>
+                <Dialog
+                    fullWidth={true}
+                    maxWidth='sm'
+                    open={changeDescriptionDialog}
+                    onClose={() => setChangeDescriptionDialog(false)}
+                    aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">修改信息</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            sx={{ width: "100%" }}
+                            id="filled-multiline-flexible"
+                            label="用户描述"
+                            multiline
+                            rows={6}
+                            value={userData?.description}
+                            onChange={(e) => setUserData(new UserInfoReply({
+                                id: userData?.id,
+                                name: userData?.name,
+                                avatarImage: userData?.avatarImage,
+                                isStaff: userData?.isStaff,
+                                description: e.target.value,
+                            }))}
+                            variant="filled"
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setChangeDescriptionDialog(false)} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={() => ChangeDescriptionBtn()} color="primary">
+                            修改
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    fullWidth={true}
+                    maxWidth='sm'
+                    open={changePasswordDialog}
+                    onClose={() => setChangePasswordDialog(false)}
+                    aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">修改密码</DialogTitle>
+                    <DialogContent>
+                        <Grid container>
+                            <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
+                                <TextField
+                                    sx={{ width: "100%" }}
+                                    id="filled-multiline-flexible"
+                                    label="旧密码"
+                                    type="password"
+                                    multiline
+                                    maxRows={4}
+                                    onChange={(e) => setChangePassword(e.target.value)}
+                                    variant="filled"
+                                />
+                            </Grid>
+                            <Grid item sx={{ padding: '4px 4px' }} xs={12} sm={6}>
+                                <TextField
+                                    sx={{ width: "100%" }}
+                                    id="filled-multiline-flexible"
+                                    label="新密码"
+                                    multiline
+                                    type="password"
+                                    maxRows={4}
+                                    onChange={(e) => setOldChangePassword(e.target.value)}
+                                    variant="filled"
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setChangePasswordDialog(false)} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={() => ChangePasswordBtn()} color="primary">
+                            修改
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+
+            <Container fixed sx={{ marginTop: '36px' }}>
+                <h3>我的比赛</h3>
+                <Grid container spacing={2}>
                     {userJoinComList?.list.map((item) => {
                         return (
-                            <Grid xs={12} sx={{ display: 'flex', alignItems: 'center',margin:'-12px' }}>
-                                <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
-                            </Grid>
+                            <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                         )
                     })}
-                </Container>
+                </Grid>
+            </Container>
 
-                <Container fixed sx={{ marginTop: '24px' }}>
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell align="right">队名</TableCell>
-                                    <TableCell align="right">操作</TableCell>
+            <Container fixed sx={{ marginTop: '36px' }}>
+                <h3>我的作品</h3>
+                <Grid container spacing={2}>
+                    {teamJoinWorksList?.workList.map((item) => {
+                        return (
+                            <ItemCard name={item.workName} id={item.id} image={item.headerImageURL} staffName={''} description={''}></ItemCard>
+                        )
+                    })}
+                </Grid>
+            </Container>
+
+            <Container fixed sx={{ marginTop: '36px', marginBottom: '20%' }}>
+                <h3>入队邀请</h3>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell align="right">队名</TableCell>
+                                <TableCell align="right">操作</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {list?.list && list.list.map((row) => (
+                                <TableRow key={row.teamId}>
+                                    <TableCell component="th" scope="row">
+                                        {row.teamId}
+                                    </TableCell>
+                                    <TableCell align="right">{row.teamName}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => JoinTeamBtn(userId as number, row.teamId)} aria-label="EditIcon">
+                                            <CheckIcon />
+                                        </IconButton>
+                                        <IconButton onClick={() => RejectJoinTeamBtn(row.teamId)} aria-label="delete">
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </TableCell>
                                 </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {list?.list && list.list.map((row) => (
-                                    <TableRow key={row.teamId}>
-                                        <TableCell component="th" scope="row">
-                                            {row.teamId}
-                                        </TableCell>
-                                        <TableCell align="right">{row.teamName}</TableCell>
-                                        <TableCell align="right">
-                                            <IconButton onClick={() => JoinTeamBtn(userId as number, row.teamId)} aria-label="EditIcon">
-                                                <CheckIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => RejectJoinTeamBtn(row.teamId)} aria-label="delete">
-                                                <CloseIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Container>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Container>
 
-            </Box>
             <Bottombar></Bottombar>
         </>
     )
