@@ -64,7 +64,7 @@ export default function Work() {
         setSnackbarsState(true);
     }
 
-    
+
     const [worksDetails, setWorksDetails] = React.useState<WorkDetails>()
     //检查参数是否存在不存在重定向
     const navigate = useNavigate();
@@ -78,16 +78,16 @@ export default function Work() {
         workApi.getWorksDetailsById(new WorksIdRequest({
             worksId: workId
         })).then(req => {
-            console.log(req);
-            
+            console.log(req.imageUrlList);
+
             setWorksDetails(req);
         }).catch(req => {
             console.log(req);
-            
+
             //navigate('/index');
             //return;
         })
-    
+
     }, [])
 
 
@@ -107,15 +107,13 @@ export default function Work() {
                     onSwiper={(swiper) => console.log(swiper)}
                     onSlideChange={() => console.log('slide change')}
                 >
-                    {worksDetails.imageUrlList.map((data) =>{
-
-                    })}
-                    <SwiperSlide>
-                        <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
-                            <img style={{ width: '100%' }} src="http://wx.xcx.tophousekeep.chizg.cn/view/admin/assets/img/header/0.png" alt="" />
-                        </div>
-                    </SwiperSlide>
-
+                    {worksDetails?.imageUrlList.map((imageUrl) => (
+                        <SwiperSlide key={imageUrl}>
+                            <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
+                                <img style={{ width: '100%' }} src={imageUrl} alt="" />
+                            </div>
+                        </SwiperSlide>
+                    ))}
                 </Swiper>
             </Container>
             <Container fixed sx={{ marginBottom: '200px' }}>
