@@ -2,7 +2,7 @@ import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Circul
 import NavBar from "@/component/navbar";
 import Bottombar from "@/component/footer";
 import React, { useEffect } from "react";
-import { fileApi, workApi } from "@/http/http_api";
+import { fileApi, userApi, workApi } from "@/http/http_api";
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -98,14 +98,18 @@ export default function Work() {
             }).catch(req => {
                 console.log(req);
             })
+            const teamId = req.teamId;
             //检查是否为管理员
-            workApi.getUserIsTeamAdmin(new GetUserIsTeamAdminRequest({
-                teamId: req.teamId
-            })).then(req => {
-                setAdminStatus(true);
-            }).catch(req => {
-                console.log(req);
+            userApi.getUserTokenInfoWithoutError(undefined).then(req => {
+                workApi.getUserIsTeamAdmin(new GetUserIsTeamAdminRequest({
+                    teamId: teamId
+                })).then(req => {
+                    setAdminStatus(true);
+                }).catch(req => {
+                    console.log(req);
+                })
             })
+
             setWorksDetails(req);
         }).catch(req => {
             console.log(req);

@@ -35,7 +35,7 @@ export default function NavBar() {
     const classes = useStyles();
     const [status, setStatus] = React.useState(0);
 
-    userApi.getUserTokenInfo(undefined).then(req => {
+    userApi.getUserTokenInfoWithoutError(undefined).then(req => {
         setStatus(1);
     })
 

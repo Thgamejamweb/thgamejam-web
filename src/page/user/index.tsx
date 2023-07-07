@@ -13,6 +13,7 @@ import Password from "antd/es/input/Password";
 import SnackBar from '@/component/snackbar'
 import { CompetitionListReply, GetTeamJoinCompetitionListRequest, GetUserJoinCompetitionListRequest } from "@api/api/thgamejam/competition/competition";
 import { GetAllWorksByUserReply, GetWorksByIdRequest, GetWorksListByTeamIdReply, WorksIdRequest } from "@api/api/thgamejam/works/works";
+import { useNavigate } from "react-router-dom";
 
 interface ItemInfo {
     description?: string,
@@ -22,37 +23,6 @@ interface ItemInfo {
     image: string,
 }
 
-export function ItemCard(item: ItemInfo) {
-    return (
-        <Grid item key={item.id} xs={12} sm={6} md={4}>
-            <Card>
-                <CardActionArea>
-                    <CardMedia
-                        style={{ height: 140 }}
-                        image={item.image}
-                        title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            {item.name}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {item.description}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-                {/* <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions> */}
-            </Card>
-        </Grid>
-    )
-}
 
 export default function Home() {
 
@@ -68,6 +38,40 @@ export default function Home() {
     const [changePasswordDialog, setChangePasswordDialog] = useState(false);
     const [oldChangePassword, setOldChangePassword] = useState('');
     const [changePassword, setChangePassword] = useState('');
+    const navigate = useNavigate();
+
+    //Card
+    function ItemCard(item: ItemInfo) {
+        return (
+            <Grid item key={item.id} xs={12} sm={6} md={4}>
+                <Card onClick={()=>navigate('/work?workId='+item.id)}>
+                    <CardActionArea>
+                        <CardMedia
+                            style={{ height: 140 }}
+                            image={item.image}
+                            title="Contemplative Reptile"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                {item.name}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {item.description}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    {/* <CardActions>
+                        <Button size="small" color="primary">
+                            Share
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions> */}
+                </Card>
+            </Grid>
+        )
+    }
 
     //弹窗
     const [snackbarsState, setSnackbarsState] = React.useState(false);
@@ -106,6 +110,8 @@ export default function Home() {
             })
 
             workApi.getAllWorksByUserRequest(undefined).then(req => {
+                console.log(req);
+                
                 setTeamJoinWorksList(req)
             }).catch(req => {
                 console.log(req);

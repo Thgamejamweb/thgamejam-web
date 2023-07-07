@@ -14,7 +14,7 @@ axios.interceptors.response.use(
         // 如果响应失败，检查状态码是否为 302 (重定向)
         if (error.response && error.response.status === 401) {
             // 跳转到登录页面
-            //window.location.assign("/login");
+            window.location.assign("/login");
         }
         // 如果是其他错误，则抛出错误，以便其他地方处理
         return Promise.reject(error);
