@@ -334,6 +334,7 @@ export default function Home() {
                                     maxRows={4}
                                     sx={{ width: "100%" }}
                                     variant="outlined"
+                                    value={name}
                                     onChange={e => setName(e.target.value)}
                                 />
                             </Grid>
