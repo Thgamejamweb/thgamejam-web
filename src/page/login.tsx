@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -21,6 +21,13 @@ export default function Login() {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const navigate = useNavigate();
+
+    //防止重复登入
+    useEffect(()=>{
+        userApi.getUserTokenInfoWithoutError(undefined).then(req => {
+            navigate('/user')
+        })
+    },[])
 
     const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         setUsername(e.target.value);

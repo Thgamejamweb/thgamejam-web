@@ -76,6 +76,9 @@ export default function NavBar() {
                             <Button href="/user" color="primary" variant="outlined" className={classes.link}>
                                 用户中心
                             </Button>
+                            <Button color="default" variant="outlined" className={classes.link}>
+                                登出
+                            </Button>
                         </>
                 }
             </Toolbar>

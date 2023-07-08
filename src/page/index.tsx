@@ -72,7 +72,7 @@ export default function Work() {
     function ItemCard(item: ItemInfo) {
         return (
             <Grid item key={item.id} xs={12} sm={4} md={2}>
-                <Card style={{ backgroundColor: '#252525', borderRadius: '13.33px' }} onClick={() => navigate('/competition0?id=' + item.id)}>
+                <Card style={{ backgroundColor: '#252525', borderRadius: '13.33px' }} onClick={() => navigate('/competition?id=' + item.id)}>
                     <CardActionArea>
                         <CardMedia
                             style={{ height: 200 }}
@@ -88,14 +88,6 @@ export default function Work() {
                             </Typography>
                         </CardContent>
                     </CardActionArea>
-                    {/* <CardActions>
-                        <Button size="small" color="primary">
-                            Share
-                        </Button>
-                        <Button size="small" color="primary">
-                            Learn More
-                        </Button>
-                    </CardActions> */}
                 </Card>
             </Grid>
         )
@@ -125,12 +117,6 @@ export default function Work() {
         }).catch(req => {
             console.log(req);
         })
-        // 获取比赛所有的已提交参赛作品信息
-        // competitionApi.getWorksListByCompetitionId(undefined).then(req => {
-        //     setHeaderGGG(req);
-        // }).catch(req => {
-        //     console.log(req);
-        // })
         // 获取结束比赛列表
         competitionApi.getEndCompetitionList(undefined).then(req => {
             setGetEndCompetitionList(req);
@@ -182,7 +168,7 @@ export default function Work() {
                                             >
                                                 团队：{data.teamName}
                                             </Typography>
-                                            <Button style={{ marginTop: '24px',color:'white',fontSize:'24px' }} onClick={() => { navigate('/work?workId=' + data.id) }} variant="outlined" color='inherit'>
+                                            <Button style={{ marginTop: '24px', color: 'white', fontSize: '24px' }} onClick={() => { navigate('/work?workId=' + data.id) }} variant="outlined" color='inherit'>
                                                 前往试玩
                                             </Button>
                                         </div>
@@ -235,7 +221,7 @@ export default function Work() {
                         fontSize: '20px',
                         fontWeight: '600',
                     }}
-                    >我结束的比赛</h3>
+                    >结束的比赛</h3>
                     <Grid container spacing={3} style={{ marginTop: '0px' }}>
                         {GetEndCompetitionList?.list.map((item) => {
                             return (

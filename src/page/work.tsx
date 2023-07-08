@@ -144,122 +144,132 @@ export default function Work() {
     }
 
     return (
-        <>
+        <div style={{ backgroundColor: 'black' }}>
             <NavBar></NavBar>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <Container fixed sx={{ padding: { xs: '0 0' } }} >
-                <div style={{ height: '200px', maxWidth: '100%', overflow: 'hidden' }}>
+                <div style={{ height: '288px', maxWidth: '100%', overflow: 'hidden', borderBottomLeftRadius: '13.33px', borderBottomRightRadius: '13.33px' }}>
                     <img style={{ width: '100%' }} src={worksDetails?.headerImageURL} alt="" />
                 </div>
             </Container>
-            <Container fixed sx={{ marginBottom: '200px' }}>
-                <Grid container spacing={5} className={classes.mainGrid}>
-                    <Grid item xs={12} md={8}>
-                        <Typography variant="h6" gutterBottom>
-                            {worksDetails?.worksName}
-                        </Typography>
-                        <Divider />
-                        {worksDetails?.content}
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Swiper
-                            modules={[Navigation, Pagination, Scrollbar, A11y]}
-                            spaceBetween={50}
-                            slidesPerView={1}
-                            //navigation
-                            pagination={{ clickable: true }}
-                            //scrollbar={{ draggable: true }}
-                            onSwiper={(swiper) => console.log(swiper)}
-                            onSlideChange={() => console.log('slide change')}
-                        >
-                            {worksDetails?.imageUrlList.map((imageUrl) => (
-                                <SwiperSlide >
-                                    <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
-                                        <img style={{ width: '100%' }} src={imageUrl} alt="" />
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-                        <div style={{ marginBottom: '32px' }}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
 
-                                endIcon={<GetAppIcon></GetAppIcon>}
-                                onClick={() => { handleDownload(worksDownload?.url as string, worksDownload?.fileName as string) }}
-                            >
-                                下载
-                            </Button>
-                        </div>
-                        <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#eeeeee' }}>
-                            <Typography variant="h6" gutterBottom>
-                                团队：{worksDetails?.teamName}
-                            </Typography>
-                            <Typography>
-                                {
-                                    teamList?.list.map((data) => (
-                                        <div>{data.name}</div>
-                                    ))
-                                }
-                            </Typography>
-                        </Paper>
-                        {
-                            adminStatus == false
-                                ?
-                                <></>
-                                :
-                                <>
-                                    <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
-                                        管理
-                                    </Typography>
+            <Container fixed sx={{ padding: { xs: '0 0' }, marginBottom: '200px', marginTop: '24px' }}>
+                <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#121212', borderRadius: '13.33px' }}>
 
-                                    <Button
-                                        fullWidth
-                                        variant="contained"
-                                        color='secondary'
-                                        endIcon={<EditIcon></EditIcon>}
-                                        onClick={() => { navigate('/user/workEdit?workId=' + workId + '&teamId=' + worksDetails?.teamId) }}
-                                    >
-                                        编辑
-                                    </Button>
-                                    <Button
-                                        sx={{ marginTop: '8px' }}
-                                        fullWidth
-                                        variant="contained"
-                                        endIcon={<DeleteIcon></DeleteIcon>}
-                                        onClick={() => { setDeleteOpen(true) }}
-                                    >
-                                        删除
-                                    </Button>
-                                    <Dialog
-                                        open={deleteOpen}
-                                        onClose={() => { setDeleteOpen(false) }}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                    >
-                                        <DialogTitle id="alert-dialog-title">{"危险操作警告"}</DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                                您确定要删除当前作品吗？
-                                            </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={() => { setDeleteOpen(false) }} color="primary">
-                                                取消
-                                            </Button>
-                                            <Button onClick={DeleteBtn} color="error" autoFocus>
-                                                确定删除
-                                            </Button>
-                                        </DialogActions>
-                                    </Dialog>
-                                </>
-                        }
-                        {/* <Link display="block" variant="body1" href='#'>
+                    <Grid container spacing={5}>
+                        <Grid item xs={12} md={8}>
+                            <Paper elevation={0} style={{ backgroundColor: '#eeeeee', borderRadius: '13.33px', padding: '36px' }}>
+                                <Typography variant="h6" gutterBottom>
+                                    {worksDetails?.worksName}
+                                </Typography>
+                                <Divider />
+                                {worksDetails?.content}
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={12} md={4}>
+                            <div style={{ borderRadius: '13.33px', overflow: 'hidden' }}>
+                                <Swiper
+                                    modules={[Navigation, Pagination, Scrollbar, A11y]}
+                                    spaceBetween={50}
+                                    slidesPerView={1}
+                                    //navigation
+                                    pagination={{ clickable: true }}
+                                    //scrollbar={{ draggable: true }}
+                                    onSwiper={(swiper) => console.log(swiper)}
+                                    onSlideChange={() => console.log('slide change')}
+                                >
+
+                                    {worksDetails?.imageUrlList.map((imageUrl) => (
+                                        <SwiperSlide >
+                                            <div style={{ overflow: 'hidden', maxHeight: '400px' }}>
+                                                <img style={{ width: '100%' }} src={imageUrl} alt="" />
+                                            </div>
+                                        </SwiperSlide>
+                                    ))}
+
+                                </Swiper>
+                            </div>
+                            <div style={{ marginBottom: '32px' }}>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+
+                                    endIcon={<GetAppIcon></GetAppIcon>}
+                                    onClick={() => { handleDownload(worksDownload?.url as string, worksDownload?.fileName as string) }}
+                                >
+                                    下载
+                                </Button>
+                            </div>
+                            <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#eeeeee', borderRadius: '13.33px' }}>
+                                <Typography variant="h6" gutterBottom>
+                                    团队：{worksDetails?.teamName}
+                                </Typography>
+                                <Typography>
+                                    {
+                                        teamList?.list.map((data) => (
+                                            <div>{data.name}</div>
+                                        ))
+                                    }
+                                </Typography>
+                            </Paper>
+                            {
+                                adminStatus == false
+                                    ?
+                                    <></>
+                                    :
+                                    <>
+                                        <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
+                                            管理
+                                        </Typography>
+
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color='secondary'
+                                            endIcon={<EditIcon></EditIcon>}
+                                            onClick={() => { navigate('/user/workEdit?workId=' + workId + '&teamId=' + worksDetails?.teamId) }}
+                                        >
+                                            编辑
+                                        </Button>
+                                        <Button
+                                            sx={{ marginTop: '8px' }}
+                                            fullWidth
+                                            variant="contained"
+                                            endIcon={<DeleteIcon></DeleteIcon>}
+                                            onClick={() => { setDeleteOpen(true) }}
+                                        >
+                                            删除
+                                        </Button>
+                                        <Dialog
+                                            open={deleteOpen}
+                                            onClose={() => { setDeleteOpen(false) }}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">{"危险操作警告"}</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText id="alert-dialog-description">
+                                                    您确定要删除当前作品吗？
+                                                </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={() => { setDeleteOpen(false) }} color="primary">
+                                                    取消
+                                                </Button>
+                                                <Button onClick={DeleteBtn} color="error" autoFocus>
+                                                    确定删除
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </>
+                            }
+                            {/* <Link display="block" variant="body1" href='#'>
                                 [archive.title]
                             </Link> */}
 
-                        {/* <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
+                            {/* <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
                                 Social
                             </Typography>
 
@@ -288,11 +298,12 @@ export default function Work() {
                                 </Grid>
                             </Link> */}
 
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Paper>
             </Container >
 
             <Bottombar></Bottombar>
-        </>
+        </div>
     )
 }

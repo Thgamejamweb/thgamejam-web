@@ -110,8 +110,7 @@ export default function Home() {
             })
 
             workApi.getAllWorksByUserRequest(undefined).then(req => {
-                console.log(req);
-                
+                //console.log(req);
                 setTeamJoinWorksList(req)
             }).catch(req => {
                 console.log(req);
