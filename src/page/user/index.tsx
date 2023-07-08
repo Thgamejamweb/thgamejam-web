@@ -47,7 +47,7 @@ export default function Home() {
                 <Card onClick={()=>navigate('/work?workId='+item.id)}>
                     <CardActionArea>
                         <CardMedia
-                            style={{ height: 140 }}
+                            style={{ height: 200 }}
                             image={item.image}
                             title="Contemplative Reptile"
                         />

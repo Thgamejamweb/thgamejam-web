@@ -188,6 +188,7 @@ export default function Work() {
                                         variant="contained"
                                         color='secondary'
                                         endIcon={<EditIcon></EditIcon>}
+                                        onClick={()=>{navigate('/user/workEdit?workId='+workId+'&teamId='+worksDetails?.teamId)}}
                                     >
                                         编辑
                                     </Button>
