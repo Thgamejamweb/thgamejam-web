@@ -43,7 +43,8 @@ export default function Home() {
     //
     const [name, setName] = React.useState('');
     const [headerImageURL, setHeaderImageURL] = React.useState('');
-    const [FileId, setFileId] = React.useState('请选择文件');
+    const [FileId, setFileId] = React.useState(0);
+    const [FileIdS, setFileIdS] = React.useState('请选择文件');
     const [content, setContent] = React.useState('');
     //重定向初始化
     const navigate = useNavigate();
@@ -66,7 +67,7 @@ export default function Home() {
             teamId: teamId,
             headerImageURL: headerImageURL,
             content: content,
-            fileId: 0,
+            fileId: FileId,
             imageUrlList: imageUrlList
         })).then(req => {
             FunSnackbars(1, '添加成功');
@@ -130,14 +131,14 @@ export default function Home() {
             if (selectedFile) {
                 calculateFileHash(selectedFile).then(req => {
                     const fileHash = req;
-                    setFileId('upload');
+                    setFileIdS('upload');
                     fileApi.getUploadUrl(new GetUploadUrlRequest({
                         fileName: selectedFile.name as string,
                         fileSize: selectedFile.size as number,
                         eTag: fileHash, // 如果有文件哈希值，可以在这里提供
                     })).then(req => {
                         const { url } = req;
-                        const ImgId = req.id;
+                        const FileId = req.id;
                         // 使用预签名URL上传文件
                         axios.put(url, selectedFile, {
                             headers: {
@@ -145,22 +146,23 @@ export default function Home() {
                             },
                         }).then(req => {
                             fileApi.getDownloadUrlByid(new GetDownloadUrlRequest({
-                                id: ImgId
+                                id: FileId
                             })).then(req => {
                                 // 在此处处理上传成功的逻辑
                                 FunSnackbars(1, '上传成功');
                                 //console.log(req.url);
-                                setFileId(req.fileName);
+                                setFileIdS(req.fileName);
+                                setFileId(FileId);
                             }).catch(req => {
-                                setFileId('');
+                                setFileIdS('');
                                 FunSnackbars(2, 'URL获取失败');
                             });
                         }).catch(req => {
-                            setFileId('');
+                            setFileIdS('');
                             FunSnackbars(2, '上传失败');
                         });
                     }).catch(req => {
-                        setFileId('');
+                        setFileIdS('');
                         FunSnackbars(2, '上传地址获取失败');
                     })
                 })
@@ -392,11 +394,11 @@ export default function Home() {
                                 </DialogTitle>
                                 <DialogContent>
                                     {
-                                        FileId != 'upload'
+                                        FileIdS != 'upload'
                                             ?
                                             <>
                                                 <div style={{ margin: '12px 0' }}>
-                                                    <TextField disabled id="standard-disabled" label="Disabled" fullWidth defaultValue={FileId} />
+                                                    <TextField disabled id="standard-disabled" label="文件名" fullWidth defaultValue={FileIdS} />
                                                 </div>
                                                 <label htmlFor="file-input1">
                                                     <input
@@ -424,7 +426,7 @@ export default function Home() {
                                     }
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={() => setOpenDialogHeaderImageURL(false)} color="primary">
+                                    <Button onClick={() => setOpenDialogFile(false)} color="primary">
                                         完成
                                     </Button>
                                 </DialogActions>
