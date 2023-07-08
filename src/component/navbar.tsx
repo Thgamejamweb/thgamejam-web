@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import { userApi } from "@/http/http_api";
+import { useNavigate } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,12 +35,22 @@ const useStyles = makeStyles((theme) => ({
 export default function NavBar() {
     const classes = useStyles();
     const [status, setStatus] = React.useState(0);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         userApi.getUserTokenInfoWithoutError(undefined).then(req => {
             setStatus(1);
         })
     },[])
+
+    //退出账户
+    const deleteUserToken = ()=>{
+        const date = new Date();
+        date.setTime(date.getTime() - 1); // 将时间设置为过去的时间
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = "token=; " + expires + "; path=/;";
+        navigate('/login');
+    }
 
     return (
         <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
@@ -76,7 +87,7 @@ export default function NavBar() {
                             <Button href="/user" color="primary" variant="outlined" className={classes.link}>
                                 用户中心
                             </Button>
-                            <Button color="default" variant="outlined" className={classes.link}>
+                            <Button onClick={deleteUserToken} color="default" variant="outlined" className={classes.link}>
                                 登出
                             </Button>
                         </>

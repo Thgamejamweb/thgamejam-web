@@ -128,8 +128,8 @@ export default function Work() {
 
     return (
         <div style={{ backgroundColor: 'black' }}>
-            <NavBar></NavBar>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
+            <NavBar></NavBar>
             <Container fixed sx={{ padding: { xs: '0 0' }, maxWidth: { lg: '1800px' } }} >
                 <Swiper
                     modules={[Navigation, Pagination, Scrollbar, A11y]}

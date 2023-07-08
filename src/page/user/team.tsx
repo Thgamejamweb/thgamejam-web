@@ -283,7 +283,7 @@ export default function Home() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {list?.list.map((row) => (
+                            {list?.list && list?.list.map((row) => (
                                 <TableRow key={row.teamId}>
                                     <TableCell component="th" scope="row">
                                         {row.teamId}

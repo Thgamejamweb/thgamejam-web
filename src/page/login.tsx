@@ -14,6 +14,7 @@ import { GetUserPublicKeyRequest, LoginRequest } from "@api/api/thgamejam/user/u
 import { JSEncrypt } from 'jsencrypt';
 import NavBar from "@/component/navbar";
 import { userApi } from "@/http/http_api.ts";
+import { Container } from '@material-ui/core';
 
 
 
@@ -23,18 +24,12 @@ export default function Login() {
     const navigate = useNavigate();
 
     //防止重复登入
-    useEffect(()=>{
+    useEffect(() => {
         userApi.getUserTokenInfoWithoutError(undefined).then(req => {
             navigate('/user')
         })
-    },[])
+    }, [])
 
-    const handleUsernameChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setUsername(e.target.value);
-    };
-    const handlePasswordChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        setPassword(e.target.value);
-    };
     const handleLoginSubmit = (e: any) => {
         userApi.getUserPublicKey(new GetUserPublicKeyRequest({
             username: username
@@ -61,8 +56,8 @@ export default function Login() {
     return (
         <>
             <NavBar></NavBar>
-            <Box sx={{ height: window.innerHeight - 75, bgcolor: '#F4F4F4' }}>
-                <Box sx={{ height: 400, pt: 5, bgcolor: '#F4F4F4', display: 'flex', justifyContent: 'center' }}>
+            <Container fixed >
+                <Box sx={{ pt: 5, display: 'flex', justifyContent: 'center' }}>
                     <Card sx={{ width: 500, height: '100%' }} >
                         <CardContent sx={{ p: '0' }}>
                             <Box sx={{ height: 75, px: 5, display: 'flex', alignItems: 'center' }}>
@@ -73,8 +68,8 @@ export default function Login() {
                             <Divider />
 
                             <Box sx={{ pt: 5, px: 5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                <TextField sx={{ mb: 3 }} id="outlined-basic" label="account" variant="standard" onChange={handleUsernameChange} />
-                                <TextField sx={{ mb: 5 }} id="outlined-basic" label="password" variant="standard" onChange={handlePasswordChange} />
+                                <TextField sx={{ mb: 3 }} id="outlined-basic" label="用户名" type="text" variant="standard" value={username} onChange={e => { setUsername(e.target.value) }} />
+                                <TextField sx={{ mb: 5 }} id="outlined-basic" label="密码" type="password" variant="standard" value={password} onChange={e => { setPassword(e.target.value) }} />
                                 <Box>
                                     <Button sx={{ width: '20%', mb: 3 }} variant="contained" onClick={handleLoginSubmit}>登入</Button>
                                 </Box>
@@ -92,7 +87,7 @@ export default function Login() {
                         </CardContent>
                     </Card>
                 </Box>
-            </Box>
+            </Container>
         </>
     );
 }

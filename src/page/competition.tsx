@@ -258,7 +258,7 @@ export default function Work() {
                                                                     native: true,
                                                                 }}
                                                             >
-                                                                {GetUserAllTeamListReply?.list.map((option) => (
+                                                                {GetUserAllTeamListReply?.list && GetUserAllTeamListReply?.list.map((option) => (
                                                                     <option key={option.teamId} value={option.teamId}>
                                                                         {option.teamName}
                                                                     </option>

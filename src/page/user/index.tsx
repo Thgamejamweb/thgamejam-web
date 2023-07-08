@@ -314,7 +314,7 @@ export default function Home() {
             <Container fixed sx={{ marginTop: '36px' }}>
                 <h3>我的比赛</h3>
                 <Grid container spacing={2}>
-                    {userJoinComList?.list.map((item) => {
+                    {userJoinComList?.list && userJoinComList?.list.map((item) => {
                         return (
                             <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                         )
@@ -325,7 +325,7 @@ export default function Home() {
             <Container fixed sx={{ marginTop: '36px' }}>
                 <h3>我的作品</h3>
                 <Grid container spacing={2}>
-                    {teamJoinWorksList?.workList.map((item) => {
+                    {teamJoinWorksList?.workList && teamJoinWorksList?.workList.map((item) => {
                         return (
                             <ItemCard name={item.workName} id={item.id} image={item.headerImageURL} staffName={''} description={''}></ItemCard>
                         )
