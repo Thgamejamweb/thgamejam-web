@@ -207,7 +207,6 @@ export default function Home() {
                                     id="date"
                                     label="报名开始日期"
                                     type="date"
-                                    defaultValue="2017-05-24"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -220,7 +219,6 @@ export default function Home() {
                                     id="date"
                                     label="报名结束日期"
                                     type="date"
-                                    defaultValue="2017-05-24"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -233,7 +231,6 @@ export default function Home() {
                                     id="date"
                                     label="此赛开始日期"
                                     type="date"
-                                    defaultValue="2017-05-24"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -246,7 +243,6 @@ export default function Home() {
                                     id="date"
                                     label="比赛结束日期"
                                     type="date"
-                                    defaultValue="2017-05-24"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -259,7 +255,6 @@ export default function Home() {
                                     id="date"
                                     label="评分开始日期"
                                     type="date"
-                                    defaultValue="2017-05-24"
                                     InputLabelProps={{
                                         shrink: true,
                                     }}

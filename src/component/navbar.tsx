@@ -69,6 +69,9 @@ export default function NavBar() {
                                 <Link variant="button" color="textPrimary" href="/user/team" className={classes.link}>
                                     队伍管理
                                 </Link>
+                                <Link variant="button" color="textPrimary" href="/user/competition" className={classes.link}>
+                                    发布比赛
+                                </Link>
                             </nav>
                             <Button href="/user" color="primary" variant="outlined" className={classes.link}>
                                 用户中心

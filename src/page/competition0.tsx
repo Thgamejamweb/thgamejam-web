@@ -2,7 +2,7 @@ import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Circul
 import NavBar from "@/component/navbar";
 import Bottombar from "@/component/footer";
 import React, { useEffect } from "react";
-import { fileApi, teamApi, userApi, workApi } from "@/http/http_api";
+import { competitionApi, fileApi, teamApi, userApi, workApi } from "@/http/http_api";
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -20,6 +20,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { GetDownloadUrlReply, GetDownloadUrlRequest } from "@api/api/thgamejam/file/file";
 import { GetTeamMemberListReply, GetTeamMemberListRequest } from "@api/api/thgamejam/team/team";
+import { JoinCompetitionRequest } from "@api/api/thgamejam/competition/competition";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -74,21 +75,12 @@ export default function Work() {
     const workId = Number(urlParams.get('workId') as unknown);
     const [deleteOpen, setDeleteOpen] = React.useState<boolean>(false);
 
-    //重命名下载
-    const handleDownload = (url: string, filename: string) => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.target = '_blank';
-        link.click();
-    };
-
     //初始化加载
     useEffect(() => {
-        if (workId === 0) {
-            navigate('/index');
-            return;
-        }
+        // if (workId === 0) {
+        //     navigate('/index');
+        //     return;
+        // }
         workApi.getWorksDetailsById(new WorksIdRequest({
             worksId: workId
         })).then(req => {
@@ -110,16 +102,6 @@ export default function Work() {
             }).catch(req => {
                 console.log(req);
             })
-            //检查是否为管理员
-            userApi.getUserTokenInfoWithoutError(undefined).then(req => {
-                workApi.getUserIsTeamAdmin(new GetUserIsTeamAdminRequest({
-                    teamId: teamId
-                })).then(req => {
-                    setAdminStatus(true);
-                }).catch(req => {
-                    console.log(req);
-                })
-            })
 
             setWorksDetails(req);
         }).catch(req => {
@@ -129,17 +111,16 @@ export default function Work() {
     }, [])
 
     //删除作品
-    const DeleteBtn = () => {
-        workApi.deleteWorksById(new DeleteWorksByIdRequest({
-            workId: worksDetails?.worksId,
+    const JoinCompBtn = () => {
+        competitionApi.joinCompetition(new JoinCompetitionRequest({
+            competitionId: worksDetails?.worksId,
             teamId: worksDetails?.teamId
         })).then(req => {
             setDeleteOpen(false)
-            FunSnackbars(1, '删除成功，正在重定向');
-            navigate('/');
+            FunSnackbars(1, '加入成功');
         }).catch(req => {
             setDeleteOpen(false)
-            FunSnackbars(2, '删除失败');
+            FunSnackbars(2, '加入失败');
         })
     }
 
@@ -181,16 +162,24 @@ export default function Work() {
                             ))}
                         </Swiper>
                         <div style={{ marginBottom: '32px' }}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
+                            {
+                                adminStatus == false
+                                    ?
+                                    <></>
+                                    :
+                                    <>
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
 
-                                endIcon={<GetAppIcon></GetAppIcon>}
-                                onClick={() => { handleDownload(worksDownload?.url as string, worksDownload?.fileName as string) }}
-                            >
-                                下载
-                            </Button>
+                                            endIcon={<GetAppIcon></GetAppIcon>}
+                                            onClick={() => { handleDownload(worksDownload?.url as string, worksDownload?.fileName as string) }}
+                                        >
+                                            加入比赛
+                                        </Button>
+                                    </>
+                            }
                         </div>
                         <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#eeeeee' }}>
                             <Typography variant="h6" gutterBottom>
@@ -204,57 +193,51 @@ export default function Work() {
                                 }
                             </Typography>
                         </Paper>
-                        {
-                            adminStatus == false
-                                ?
-                                <></>
-                                :
-                                <>
-                                    <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
-                                        管理
-                                    </Typography>
 
-                                    <Button
-                                        fullWidth
-                                        variant="contained"
-                                        color='secondary'
-                                        endIcon={<EditIcon></EditIcon>}
-                                        onClick={() => { navigate('/user/workEdit?workId=' + workId + '&teamId=' + worksDetails?.teamId) }}
-                                    >
-                                        编辑
-                                    </Button>
-                                    <Button
-                                        sx={{ marginTop: '8px' }}
-                                        fullWidth
-                                        variant="contained"
-                                        endIcon={<DeleteIcon></DeleteIcon>}
-                                        onClick={() => { setDeleteOpen(true) }}
-                                    >
-                                        删除
-                                    </Button>
-                                    <Dialog
-                                        open={deleteOpen}
-                                        onClose={() => { setDeleteOpen(false) }}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                    >
-                                        <DialogTitle id="alert-dialog-title">{"危险操作警告"}</DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                                您确定要删除当前作品吗？
-                                            </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={() => { setDeleteOpen(false) }} color="primary">
-                                                取消
-                                            </Button>
-                                            <Button onClick={DeleteBtn} color="error" autoFocus>
-                                                确定删除
-                                            </Button>
-                                        </DialogActions>
-                                    </Dialog>
-                                </>
-                        }
+                        <Typography variant="h6" gutterBottom className={classes.sidebarSection}>
+                            管理
+                        </Typography>
+
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color='secondary'
+                            endIcon={<EditIcon></EditIcon>}
+                            onClick={() => { navigate('/user/workEdit?workId=' + workId + '&teamId=' + worksDetails?.teamId) }}
+                        >
+                            编辑
+                        </Button>
+                        <Button
+                            sx={{ marginTop: '8px' }}
+                            fullWidth
+                            variant="contained"
+                            endIcon={<DeleteIcon></DeleteIcon>}
+                            onClick={() => { setDeleteOpen(true) }}
+                        >
+                            删除
+                        </Button>
+                        <Dialog
+                            open={deleteOpen}
+                            onClose={() => { setDeleteOpen(false) }}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">{"危险操作警告"}</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                    您确定要删除当前作品吗？
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => { setDeleteOpen(false) }} color="primary">
+                                    取消
+                                </Button>
+                                <Button onClick={DeleteBtn} color="error" autoFocus>
+                                    确定删除
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
                         {/* <Link display="block" variant="body1" href='#'>
                                 [archive.title]
                             </Link> */}
