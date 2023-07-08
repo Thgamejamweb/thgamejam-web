@@ -2,7 +2,7 @@ import { AlertColor, Avatar, Box, Button, Card, CardActions, CardContent, Circul
 import NavBar from "@/component/navbar";
 import Bottombar from "@/component/footer";
 import React, { useEffect } from "react";
-import { fileApi, userApi, workApi } from "@/http/http_api";
+import { fileApi, teamApi, userApi, workApi } from "@/http/http_api";
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -14,11 +14,12 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
-import { GetUserIsTeamAdminRequest, WorkDetails, WorksIdRequest } from "@api/api/thgamejam/works/works";
+import { DeleteWorksByIdRequest, GetUserIsTeamAdminRequest, WorkDetails, WorksIdRequest } from "@api/api/thgamejam/works/works";
 import { useNavigate } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { GetDownloadUrlReply, GetDownloadUrlRequest } from "@api/api/thgamejam/file/file";
+import { GetTeamMemberListReply, GetTeamMemberListRequest } from "@api/api/thgamejam/team/team";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -66,10 +67,12 @@ export default function Work() {
     const [worksDetails, setWorksDetails] = React.useState<WorkDetails>()
     const [worksDownload, setWorksDownload] = React.useState<GetDownloadUrlReply>()
     const [adminStatus, setAdminStatus] = React.useState(false)
+    const [teamList, setTeamList] = React.useState<GetTeamMemberListReply>()
     //检查参数是否存在不存在重定向
     const navigate = useNavigate();
     const urlParams = new URLSearchParams(window.location.search);
     const workId = Number(urlParams.get('workId') as unknown);
+    const [deleteOpen, setDeleteOpen] = React.useState<boolean>(false);
 
     //重命名下载
     const handleDownload = (url: string, filename: string) => {
@@ -99,6 +102,14 @@ export default function Work() {
                 console.log(req);
             })
             const teamId = req.teamId;
+            //获取
+            teamApi.getTeamMemberList(new GetTeamMemberListRequest({
+                teamId: teamId
+            })).then(req => {
+                setTeamList(req);
+            }).catch(req => {
+                console.log(req);
+            })
             //检查是否为管理员
             userApi.getUserTokenInfoWithoutError(undefined).then(req => {
                 workApi.getUserIsTeamAdmin(new GetUserIsTeamAdminRequest({
@@ -117,6 +128,20 @@ export default function Work() {
 
     }, [])
 
+    //删除作品
+    const DeleteBtn = () => {
+        workApi.deleteWorksById(new DeleteWorksByIdRequest({
+            workId: worksDetails?.worksId,
+            teamId: worksDetails?.teamId
+        })).then(req => {
+            setDeleteOpen(false)
+            FunSnackbars(1, '删除成功，正在重定向');
+            navigate('/');
+        }).catch(req => {
+            setDeleteOpen(false)
+            FunSnackbars(2, '删除失败');
+        })
+    }
 
     return (
         <>
@@ -171,7 +196,13 @@ export default function Work() {
                             <Typography variant="h6" gutterBottom>
                                 团队：{worksDetails?.teamName}
                             </Typography>
-                            <Typography>[description]</Typography>
+                            <Typography>
+                                {
+                                    teamList?.list.map((data) => (
+                                        <div>{data.name}</div>
+                                    ))
+                                }
+                            </Typography>
                         </Paper>
                         {
                             adminStatus == false
@@ -188,7 +219,7 @@ export default function Work() {
                                         variant="contained"
                                         color='secondary'
                                         endIcon={<EditIcon></EditIcon>}
-                                        onClick={()=>{navigate('/user/workEdit?workId='+workId+'&teamId='+worksDetails?.teamId)}}
+                                        onClick={() => { navigate('/user/workEdit?workId=' + workId + '&teamId=' + worksDetails?.teamId) }}
                                     >
                                         编辑
                                     </Button>
@@ -197,9 +228,31 @@ export default function Work() {
                                         fullWidth
                                         variant="contained"
                                         endIcon={<DeleteIcon></DeleteIcon>}
+                                        onClick={() => { setDeleteOpen(true) }}
                                     >
                                         删除
                                     </Button>
+                                    <Dialog
+                                        open={deleteOpen}
+                                        onClose={() => { setDeleteOpen(false) }}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                    >
+                                        <DialogTitle id="alert-dialog-title">{"危险操作警告"}</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                您确定要删除当前作品吗？
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => { setDeleteOpen(false) }} color="primary">
+                                                取消
+                                            </Button>
+                                            <Button onClick={DeleteBtn} color="error" autoFocus>
+                                                确定删除
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
                                 </>
                         }
                         {/* <Link display="block" variant="body1" href='#'>
