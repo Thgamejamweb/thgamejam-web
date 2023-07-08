@@ -19,8 +19,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { GetDownloadUrlReply, GetDownloadUrlRequest } from "@api/api/thgamejam/file/file";
 import { GetTeamMemberListReply, GetTeamMemberListRequest, GetUserJoinAllTeamListRequest, GetUserAllTeamListReply } from "@api/api/thgamejam/team/team";
-import { GetCompetitionDetailInfoRequest, JoinCompetitionRequest, CompetitionDetailReply } from "@api/api/thgamejam/competition/competition";
+import { GetCompetitionDetailInfoRequest, JoinCompetitionRequest, CompetitionDetailReply, AddWorksRequest } from "@api/api/thgamejam/competition/competition";
 import { CompetitionApi } from "@api/api/thgamejam/competition/competitionApi";
+import { GetWorksByIdRequest, GetWorksByNameRequest, GetWorksListByTeamIdReply } from "@api/api/thgamejam/works/works";
+import { Editor } from "@tinymce/tinymce-react";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -74,6 +76,7 @@ export default function Work() {
     }
     const [CompetitionDetailReply, setCompetitionDetailReply] = React.useState<CompetitionDetailReply>()
     const [GetUserAllTeamListReply, setGetUserAllTeamListReply] = React.useState<GetUserAllTeamListReply>();
+    const [GetWorksListByTeamIdReply, setGetWorksListByTeamIdReply] = React.useState<GetWorksListByTeamIdReply>();
     //检查参数是否存在不存在重定向
     const navigate = useNavigate();
     const urlParams = new URLSearchParams(window.location.search);
@@ -131,7 +134,6 @@ export default function Work() {
         }).catch(req => {
             console.log(req);
         })
-
     }, [Status])
 
     //加入比赛
@@ -150,6 +152,34 @@ export default function Work() {
         })
     }
 
+    //作品列表
+    useEffect(() => {
+        workApi.getWorksListByTeamId(new GetWorksByIdRequest({
+            teamId: teamId
+        })).then(req => {
+            setGetWorksListByTeamIdReply(req);
+        }).catch(req => {
+            console.log(req);
+        })
+    }, [teamId])
+    //提交作品
+    const [addWorkOpen, setAddWorkOpen] = React.useState(false);
+    const [workId, setWorkId] = React.useState(0);
+    const addWorkBtn = () => {
+        competitionApi.addCompetitionWorks(new AddWorksRequest({
+            worksId: workId,
+            teamId: teamId,
+            competitionId: id
+        })).then(req => {
+            setStatus(Status + 1);
+            FunSnackbars(1, '成功提交');
+            setAddWorkOpen(false);
+        }).catch(req => {
+            FunSnackbars(2, '提交失败');
+        })
+    }
+
+
     return (
         <div style={{ backgroundColor: 'black' }}>
             <NavBar></NavBar>
@@ -161,7 +191,6 @@ export default function Work() {
             </Container>
             <Container fixed sx={{ padding: { xs: '0 0' }, marginBottom: '200px', marginTop: '24px' }}>
                 <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#121212', borderRadius: '13.33px' }}>
-
                     <Grid container spacing={5}>
                         <Grid item xs={12} md={8}>
                             <Paper elevation={0} style={{ backgroundColor: '#eeeeee', borderRadius: '13.33px', padding: '36px' }}>
@@ -169,7 +198,7 @@ export default function Work() {
                                     {CompetitionDetailReply?.name}
                                 </Typography>
                                 <Divider />
-                                {CompetitionDetailReply?.context}
+                                <div dangerouslySetInnerHTML={{__html:CompetitionDetailReply?.context as string}}></div>
                             </Paper>
                             <Paper elevation={0} style={{ backgroundColor: '#121212', borderRadius: '13.33px', marginTop: '40px' }}>
                                 <h3 style={{
@@ -201,32 +230,26 @@ export default function Work() {
                             >
                             </Swiper>
                             <div style={{ marginBottom: '32px' }}>
-                                {
-                                    GetUserAllTeamListReply === undefined
-                                        ?
-                                        <>
-                                            <Button
-                                                fullWidth
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => { navigate('/login') }}
-                                            >
-                                                请先登入
-                                            </Button>
-                                        </>
-                                        :
-                                        CompetitionDetailReply?.isSignup == false
-                                            ?
+                                {GetUserAllTeamListReply === undefined ? (
+                                    <>
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => { navigate('/login') }}
+                                        >
+                                            请先登入
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {CompetitionDetailReply?.isSignup === false ? (
                                             <>
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    color='inherit'
-                                                >
+                                                <Button fullWidth variant="contained" color='inherit'>
                                                     报名已结束
                                                 </Button>
                                             </>
-                                            :
+                                        ) : (
                                             <>
                                                 <Button
                                                     fullWidth
@@ -276,12 +299,81 @@ export default function Work() {
                                                     </DialogActions>
                                                 </Dialog>
                                             </>
-
-                                }
+                                        )}
+                                        <div style={{ marginTop: '12px' }}>
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => { setAddWorkOpen(true) }}
+                                            >
+                                                提交作品
+                                            </Button>
+                                            <Dialog
+                                                open={addWorkOpen}
+                                                onClose={() => { setAddWorkOpen(false) }}
+                                                aria-labelledby="alert-dialog-title"
+                                                aria-describedby="alert-dialog-description"
+                                                maxWidth='sm'
+                                                fullWidth
+                                            >
+                                                <DialogTitle id="alert-dialog-title">{"选择队伍参赛"}</DialogTitle>
+                                                <DialogContent>
+                                                    <div style={{ margin: '12px' }}>
+                                                        <TextField
+                                                            id="standard-select-currency-native"
+                                                            select
+                                                            label="队伍"
+                                                            fullWidth
+                                                            value={teamId}
+                                                            onChange={e => { setTeamId(Number(e.target.value)) }}
+                                                            SelectProps={{
+                                                                native: true,
+                                                            }}
+                                                        >
+                                                            {GetUserAllTeamListReply?.list && GetUserAllTeamListReply?.list.map((option) => (
+                                                                <option key={option.teamId} value={option.teamId}>
+                                                                    {option.teamName}
+                                                                </option>
+                                                            ))}
+                                                        </TextField>
+                                                        <TextField
+                                                            id="standard-select-currency-native"
+                                                            select
+                                                            label="作品"
+                                                            fullWidth
+                                                            value={workId}
+                                                            onChange={e => { setWorkId(Number(e.target.value)) }}
+                                                            SelectProps={{
+                                                                native: true,
+                                                            }}
+                                                            sx={{ top: '12px' }}
+                                                        >
+                                                            {GetWorksListByTeamIdReply?.workList && GetWorksListByTeamIdReply?.workList.map((option) => (
+                                                                <option key={option.id} value={option.id}>
+                                                                    {option.workName}
+                                                                </option>
+                                                            ))}
+                                                        </TextField>
+                                                    </div>
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Button onClick={() => { setAddWorkOpen(false) }} color="primary">
+                                                        取消
+                                                    </Button>
+                                                    <Button onClick={addWorkBtn} color="primary" autoFocus>
+                                                        提交作品
+                                                    </Button>
+                                                </DialogActions>
+                                            </Dialog>
+                                        </div>
+                                    </>
+                                )}
                             </div>
+
                             <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#eeeeee', borderRadius: '13.33px' }}>
                                 <Typography variant="h6" gutterBottom>
-                                    {CompetitionDetailReply?.staffName}
+                                    举办方：{CompetitionDetailReply?.staffName}
                                 </Typography>
                                 <Typography>
                                     介绍：{CompetitionDetailReply?.description}

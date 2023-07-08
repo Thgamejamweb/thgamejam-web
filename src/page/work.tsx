@@ -163,7 +163,7 @@ export default function Work() {
                                     {worksDetails?.worksName}
                                 </Typography>
                                 <Divider />
-                                {worksDetails?.content}
+                                <div dangerouslySetInnerHTML={{__html:worksDetails?.content as string}}></div>
                             </Paper>
                         </Grid>
 
