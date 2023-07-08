@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -35,15 +35,17 @@ export default function NavBar() {
     const classes = useStyles();
     const [status, setStatus] = React.useState(0);
 
-    userApi.getUserTokenInfoWithoutError(undefined).then(req => {
-        setStatus(1);
-    })
+    useEffect(()=>{
+        userApi.getUserTokenInfoWithoutError(undefined).then(req => {
+            setStatus(1);
+        })
+    },[])
 
     return (
         <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
             <Toolbar className={classes.toolbar}>
                 <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                    游戏平台
+                    ThGameJam
                 </Typography>
                 {
                     status == 0
