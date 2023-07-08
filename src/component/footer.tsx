@@ -7,8 +7,8 @@ import Link from '@material-ui/core/Link';
 const useStyles = makeStyles((theme) => ({
     footer: {
         //置底
-        zIndex: 1,
-        position: 'fixed',
+        //zIndex: 1,
+        //position: 'fixed',
         bottom: 0,
         width: '100%',
         //默认
