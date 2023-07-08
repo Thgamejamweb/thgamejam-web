@@ -11,6 +11,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { GetUserIdByNameRequest, GetUserIdInfoReply } from "@api/api/thgamejam/user/user";
 import SnackBar from '@/component/snackbar'
 import { useNavigate } from "react-router-dom";
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -306,7 +307,7 @@ export default function Home() {
                             ))}
                         </TableBody>
                     </Table>
-                    <Button onClick={() => setOpenDialogAddTeam(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">创建队伍</Button>
+                    <Button startIcon={<ControlPointIcon />} onClick={() => setOpenDialogAddTeam(true)} sx={{ float: 'right' }} href="#text-buttons" color="primary">创建队伍</Button>
                     {/* 弹窗 */}
                     <Dialog
                         fullWidth={true}

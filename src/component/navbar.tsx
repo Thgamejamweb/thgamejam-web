@@ -7,7 +7,8 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import { userApi } from "@/http/http_api";
 import { useNavigate } from 'react-router-dom';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -37,14 +38,14 @@ export default function NavBar() {
     const [status, setStatus] = React.useState(0);
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
         userApi.getUserTokenInfoWithoutError(undefined).then(req => {
             setStatus(1);
         })
-    },[])
+    }, [])
 
     //退出账户
-    const deleteUserToken = ()=>{
+    const deleteUserToken = () => {
         const date = new Date();
         date.setTime(date.getTime() - 1); // 将时间设置为过去的时间
         const expires = "expires=" + date.toUTCString();
@@ -86,10 +87,10 @@ export default function NavBar() {
                             </nav>
                             <Button href="/user" color="primary" variant="outlined" className={classes.link}>
                                 用户中心
-                            </Button>
-                            <Button onClick={deleteUserToken} color="default" variant="outlined" className={classes.link}>
-                                登出
-                            </Button>
+                            </Button>   
+                            <IconButton className={classes.link} aria-label="delete">
+                                <ExitToAppIcon fontSize="small" />
+                            </IconButton>
                         </>
                 }
             </Toolbar>

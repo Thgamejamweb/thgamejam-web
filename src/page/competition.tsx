@@ -155,7 +155,7 @@ export default function Work() {
             <NavBar></NavBar>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <Container fixed sx={{ padding: { xs: '0 0' } }} >
-                <div style={{ height: '288px', maxWidth: '100%', overflow: 'hidden', borderBottomLeftRadius: '13.33px', borderBottomRightRadius: '13.33px' }}>
+                <div style={{ height: '350px', maxWidth: '100%', overflow: 'hidden', borderBottomLeftRadius: '13.33px', borderBottomRightRadius: '13.33px' }}>
                     <img style={{ width: '100%' }} src={CompetitionDetailReply?.headerImageURL} alt="" />
                 </div>
             </Container>
@@ -276,6 +276,7 @@ export default function Work() {
                                                     </DialogActions>
                                                 </Dialog>
                                             </>
+
                                 }
                             </div>
                             <Paper elevation={0} className={classes.sidebarAboutBox} style={{ backgroundColor: '#eeeeee', borderRadius: '13.33px' }}>

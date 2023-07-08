@@ -83,7 +83,7 @@ export default function Work() {
                             <Typography style={{ color: 'white', fontSize: '1.5rem' }} gutterBottom variant="h5" component="h2">
                                 {item.name}
                             </Typography>
-                            <Typography style={{ color: '#cacaca' }} variant="body2" color="textSecondary" component="p">
+                            <Typography noWrap style={{ color: '#cacaca' }} variant="body2" color="textSecondary" component="p">
                                 {item.description}
                             </Typography>
                         </CardContent>
@@ -143,8 +143,27 @@ export default function Work() {
                 >
                     {headerGGG?.worksList.map((data) => (
                         <SwiperSlide >
-                            <div style={{ height: '450px', backgroundColor: '#808080', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Grid container spacing={1}>
+                            <div style={{
+                                height: '450px',
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center', 
+                                borderBottomLeftRadius: '13.33px',
+                                borderBottomRightRadius: '13.33px',
+                                overflow:'hidden'
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundImage: `url(${data.headerImageURL})`,
+                                    backgroundSize: 'cover',
+                                    filter: 'blur(8px) brightness(150%)'
+                                }}></div>
+                                <Grid style={{ zIndex: 1 }} container spacing={1}>
                                     <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center' }}>
                                         <div style={{ padding: '10px', maxWidth: '600px', overflow: 'hidden' }}>
                                             <img style={{ width: '100%' }} src={data.headerImageURL} alt="" />

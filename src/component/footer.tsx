@@ -14,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
         //默认
         padding: theme.spacing(3, 0),
         //marginTop: '200px',
-        backgroundColor:
-            theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+        backgroundColor: '#eeeeee'
     },
 }));
 
@@ -25,16 +24,16 @@ export default function Bottombar() {
     return (
         <footer className={classes.footer}>
             <Container maxWidth="lg">
-                <Typography variant="h6" align="center" gutterBottom>
+                {/* <Typography variant="h6" align="center" gutterBottom>
                     这里是title
                 </Typography>
                 <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
                     这里是简介
-                </Typography>
+                </Typography> */}
                 <Typography variant="body2" color="textSecondary" align="center">
                     {'Copyright © '}
-                    <Link color="inherit" href="https://mui.com/">
-                        Your Website
+                    <Link color="inherit" href="#">
+                        ThGameJam
                     </Link>{' '}
                     {new Date().getFullYear()}
                     {'.'}
