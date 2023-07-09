@@ -98,7 +98,6 @@ export default function NavBar() {
             </Toolbar>
         </AppBar>
 
-
         // <Box sx={{ width: '100%', height: 60,borderBottom:1,borderColor:'#DADADA' }}>
         //     <Grid container>
         //         <Grid item xs={2}>
