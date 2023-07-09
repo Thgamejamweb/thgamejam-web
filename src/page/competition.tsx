@@ -162,6 +162,7 @@ export default function Work() {
             console.log(req);
         })
     }, [teamId])
+
     //提交作品
     const [addWorkOpen, setAddWorkOpen] = React.useState(false);
     const [workId, setWorkId] = React.useState(0);
@@ -198,7 +199,7 @@ export default function Work() {
                                     {CompetitionDetailReply?.name}
                                 </Typography>
                                 <Divider />
-                                <div dangerouslySetInnerHTML={{__html:CompetitionDetailReply?.context as string}}></div>
+                                <div dangerouslySetInnerHTML={{ __html: CompetitionDetailReply?.context as string }}></div>
                             </Paper>
                             <Paper elevation={0} style={{ backgroundColor: '#121212', borderRadius: '13.33px', marginTop: '40px' }}>
                                 <h3 style={{
@@ -275,7 +276,7 @@ export default function Work() {
                                                                 select
                                                                 label="队伍"
                                                                 fullWidth
-                                                                value={teamId}
+                                                                //value={teamId}
                                                                 onChange={e => { setTeamId(Number(e.target.value)) }}
                                                                 SelectProps={{
                                                                     native: true,
@@ -331,6 +332,9 @@ export default function Work() {
                                                                 native: true,
                                                             }}
                                                         >
+                                                            <option key={-1} value={-1}>
+                                                                请选择
+                                                            </option>
                                                             {GetUserAllTeamListReply?.list && GetUserAllTeamListReply?.list.map((option) => (
                                                                 <option key={option.teamId} value={option.teamId}>
                                                                     {option.teamName}
