@@ -90,7 +90,7 @@ export default function NavBar() {
                             <Button href="/user" color="primary" variant="outlined" className={classes.link}>
                                 用户中心
                             </Button>
-                            <IconButton className={classes.link} aria-label="delete">
+                            <IconButton onClick={deleteUserToken} className={classes.link} aria-label="delete">
                                 <ExitToAppIcon fontSize='large' />
                             </IconButton>
                         </>
