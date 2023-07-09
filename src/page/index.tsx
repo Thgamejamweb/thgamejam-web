@@ -166,20 +166,20 @@ export default function Work() {
                                 <Grid style={{ zIndex: 1 }} container spacing={1}>
                                     <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center' }}>
                                         <div style={{ padding: '10px', maxWidth: '600px', overflow: 'hidden' }}>
-                                            <img style={{ width: '100%' }} src={data.headerImageURL} alt="" />
+                                            <img style={{ maxHeight:'300px', width: '100%' }} src={data.headerImageURL} alt="" />
                                         </div>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <div style={{ padding: '10px' }}>
                                             <Typography style={{
-                                                color: '#434343',
+                                                color: 'white',
                                                 fontSize: '50px',
                                                 fontWeight: '900'
                                             }} >
                                                 {data.workName}
                                             </Typography>
                                             <Typography style={{
-                                                color: '#434343',
+                                                color: 'white',
                                                 fontSize: '25px',
                                                 fontWeight: '500',
                                             }}
@@ -187,7 +187,7 @@ export default function Work() {
                                             >
                                                 团队：{data.teamName}
                                             </Typography>
-                                            <Button style={{ marginTop: '24px', color: 'white', fontSize: '24px' }} onClick={() => { navigate('/work?workId=' + data.id) }} variant="outlined" color='inherit'>
+                                            <Button style={{ marginTop: '24px', fontSize: '24px' }} onClick={() => { navigate('/work?workId=' + data.id) }} variant="contained" color='inherit'>
                                                 前往试玩
                                             </Button>
                                         </div>
