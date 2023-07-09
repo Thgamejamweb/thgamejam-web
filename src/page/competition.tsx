@@ -346,13 +346,16 @@ export default function Work() {
                                                             select
                                                             label="作品"
                                                             fullWidth
-                                                            value={workId}
+                                                            //value={workId}
                                                             onChange={e => { setWorkId(Number(e.target.value)) }}
                                                             SelectProps={{
                                                                 native: true,
                                                             }}
                                                             sx={{ top: '12px' }}
                                                         >
+                                                            <option key={-1} value={-1}>
+                                                                请选择
+                                                            </option>
                                                             {GetWorksListByTeamIdReply?.workList && GetWorksListByTeamIdReply?.workList.map((option) => (
                                                                 <option key={option.id} value={option.id}>
                                                                     {option.workName}
