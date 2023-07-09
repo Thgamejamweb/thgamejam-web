@@ -208,7 +208,7 @@ export default function Work() {
                     }}
                     >报名中的比赛</h3>
                     <Grid container spacing={3} style={{ marginTop: '0px' }}>
-                        {GetSignupCompetitionList?.list.map((item) => {
+                        {GetSignupCompetitionList?.list && GetSignupCompetitionList?.list.map((item) => {
                             return (
                                 <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                             )
@@ -225,7 +225,7 @@ export default function Work() {
                     }}
                     >进行中的比赛</h3>
                     <Grid container spacing={3} style={{ marginTop: '0px' }}>
-                        {GetStartCompetitionList?.list.map((item) => {
+                        {GetStartCompetitionList?.list && GetStartCompetitionList?.list.map((item) => {
                             return (
                                 <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                             )
@@ -242,7 +242,7 @@ export default function Work() {
                     }}
                     >结束的比赛</h3>
                     <Grid container spacing={3} style={{ marginTop: '0px' }}>
-                        {GetEndCompetitionList?.list.map((item) => {
+                        {GetEndCompetitionList?.list && GetEndCompetitionList?.list.map((item) => {
                             return (
                                 <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                             )

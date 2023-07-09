@@ -209,7 +209,7 @@ export default function Work() {
                                 }}
                                 >作品</h3>
                                 <Grid container spacing={2} style={{ marginTop: '0px' }}>
-                                    {CompetitionDetailReply?.worksList.map((item) => {
+                                    {CompetitionDetailReply?.worksList && CompetitionDetailReply?.worksList.map((item) => {
                                         return (
                                             <ItemCard name={item.worksName} id={item.worksId} image={item.headerImageURL} staffName={''} description={''}></ItemCard>
                                         )

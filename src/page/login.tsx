@@ -15,13 +15,39 @@ import { JSEncrypt } from 'jsencrypt';
 import NavBar from "@/component/navbar";
 import { userApi } from "@/http/http_api.ts";
 import { Container } from '@material-ui/core';
-
+import SnackBar from '@/component/snackbar';
+import { AlertColor } from '@mui/material';
 
 
 export default function Login() {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const navigate = useNavigate();
+
+    //弹窗
+    const [snackbarsState, setSnackbarsState] = React.useState(false);
+    const [snackbarsSeverity, setSnackbarsSeverity] = React.useState<AlertColor>('info');
+    const [snackbarsMessage, setSnackbarsMessage] = React.useState('');
+    const FunSnackbars = (Severity: number, Message: string) => {
+        setSnackbarsMessage(Message);
+        let data: AlertColor;
+        switch (Severity) {
+            case 1:
+                data = 'success';
+                break;
+            case 2:
+                data = 'warning';
+                break;
+            case 3:
+                data = 'error';
+                break;
+            default:
+                data = 'info'
+                break;
+        }
+        setSnackbarsSeverity(data);
+        setSnackbarsState(true);
+    }
 
     //防止重复登入
     useEffect(() => {
@@ -46,15 +72,18 @@ export default function Login() {
                 navigate('/index');
             }).catch(err => {
                 console.log(err);
+                FunSnackbars(2,'登入失败');
             })
         }).catch(err => {
             console.log(err);
+            FunSnackbars(2,'登入失败');
         })
 
 
     }
     return (
         <>
+            <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <NavBar></NavBar>
             <Container fixed >
                 <Box sx={{ pt: 5, display: 'flex', justifyContent: 'center' }}>
