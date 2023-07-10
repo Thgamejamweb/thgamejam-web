@@ -186,7 +186,7 @@ export default function Work() {
             <NavBar></NavBar>
             <SnackBar severity={snackbarsSeverity} open={snackbarsState} setOpen={setSnackbarsState} message={snackbarsMessage} />
             <Container fixed sx={{ padding: { xs: '0 0' } }} >
-                <div style={{maxWidth: '100%', overflow: 'hidden', borderBottomLeftRadius: '13.33px', borderBottomRightRadius: '13.33px' }}>
+                <div style={{ maxWidth: '100%', overflow: 'hidden', borderBottomLeftRadius: '13.33px', borderBottomRightRadius: '13.33px' }}>
                     <img style={{ width: '100%' }} src={CompetitionDetailReply?.headerImageURL} alt="" />
                 </div>
             </Container>
@@ -282,6 +282,9 @@ export default function Work() {
                                                                     native: true,
                                                                 }}
                                                             >
+                                                                <option key={-1} value={-1}>
+                                                                    请选择
+                                                                </option>
                                                                 {GetUserAllTeamListReply?.list && GetUserAllTeamListReply?.list.map((option) => (
                                                                     <option key={option.teamId} value={option.teamId}>
                                                                         {option.teamName}
