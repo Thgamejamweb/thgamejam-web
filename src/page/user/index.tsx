@@ -21,6 +21,7 @@ interface ItemInfo {
     id: number,
     name: string,
     image: string,
+    state: number
 }
 
 
@@ -44,7 +45,13 @@ export default function Home() {
     function ItemCard(item: ItemInfo) {
         return (
             <Grid item key={item.id} xs={12} sm={6} md={4}>
-                <Card onClick={()=>navigate('/work?workId='+item.id)}>
+                <Card onClick={() =>
+                    item.state == 1
+                        ?
+                        navigate('/competition?id=' + item.id)
+                        :
+                        navigate('/work?workId=' + item.id)
+                }>
                     <CardActionArea>
                         <CardMedia
                             style={{ height: 200 }}
@@ -316,7 +323,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {userJoinComList?.list && userJoinComList?.list.map((item) => {
                         return (
-                            <ItemCard name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
+                            <ItemCard state={1} name={item.name} id={item.id} image={item.headerImageURL} staffName={item.staffName} description={item.description}></ItemCard>
                         )
                     })}
                 </Grid>

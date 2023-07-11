@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import Item from "antd/es/descriptions/Item";
 import { Editor } from '@tinymce/tinymce-react';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { calculateFileHash, competitionApi, fileApi, teamApi, workApi } from "@/http/http_api";
+import { aigcApi, calculateFileHash, competitionApi, fileApi, teamApi, workApi } from "@/http/http_api";
 import { CreateWorksRequest } from "@api/api/thgamejam/works/works";
 import { useNavigate } from "react-router-dom";
 import SnackBar from '@/component/snackbar';
@@ -13,6 +13,8 @@ import { GetDownloadUrlByStrRequest, GetDownloadUrlRequest, GetUploadReply, GetU
 import axios from "axios";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { CreateCompetitionRequest } from "@api/api/thgamejam/competition/competition";
+import { UpdateContentRequest } from "@api/api/thgamejam/chatgpt/aigc";
+import AdbIcon from '@material-ui/icons/Adb';
 export default function Home() {
     //弹窗
     const [snackbarsState, setSnackbarsState] = React.useState(false);
@@ -54,6 +56,33 @@ export default function Home() {
 
     //重定向初始化
     const navigate = useNavigate();
+
+    //AI优化
+    const [openDialogYouHua, setOpenDialogYouHua] = React.useState(false);
+    const [YouHuaContent, setYouHuaContent] = React.useState('');
+    const youhuaBtn = () => {
+        setOpenDialogYouHua(true);
+        if (YouHuaContent == '') {
+            youhua();
+        }
+    }
+    const youhua = () => {
+        if (YouHuaContent != 'upload') {
+            setYouHuaContent('upload');
+            aigcApi.updateContent(new UpdateContentRequest({
+                content: content
+            })).then(req => {
+                //console.log(req);
+                setYouHuaContent(req.newContent);
+                FunSnackbars(1, '优化成功');
+            }).catch(req => {
+                console.log(req);
+                setYouHuaContent('优化失败');
+                FunSnackbars(2, '优化失败');
+            })
+        }
+    }
+
 
     //提交按钮
     const addBtn = () => {
@@ -210,7 +239,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setSignupStartDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setSignupStartDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={6} md={4}>
@@ -222,7 +251,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setSignupEndDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setSignupEndDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={6} md={4}>
@@ -234,7 +263,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setStartDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setStartDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={6} md={4}>
@@ -246,7 +275,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setEndDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setEndDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={6} md={4}>
@@ -258,7 +287,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setScoreStartDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setScoreStartDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={6} md={4}>
@@ -271,7 +300,7 @@ export default function Home() {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    onChange={e => { setScoreEndDate(e.target.value+' 0:0:0') }}
+                                    onChange={e => { setScoreEndDate(e.target.value + ' 0:0:0') }}
                                 />
                             </Grid>
                             <Grid item sx={{ padding: '4px 4px' }} xs={12}>
@@ -311,6 +340,80 @@ export default function Home() {
                                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
                             }}
                         />
+                        <Button
+                            sx={{marginTop:'6px', width: '100%', height: '100%' }}
+                            variant="contained"
+                            onClick={youhuaBtn}
+                            startIcon={<AdbIcon />}
+                        >
+                            AI智能优化
+                        </Button>
+                        <Dialog
+                            maxWidth='sm'
+                            fullWidth={true}
+                            open={openDialogYouHua}
+                            onClose={() => setOpenDialogYouHua(false)}
+                            aria-labelledby="form-dialog-title">
+                            <DialogTitle id="form-dialog-title">
+                                AI智能优化
+                            </DialogTitle>
+                            <DialogContent>
+                                {
+                                    YouHuaContent != 'upload'
+                                        ?
+                                        <>
+                                            <Editor
+                                                inline={false}
+                                                apiKey='c9xsfs30dnk6exa27xghs44zl6av7syofgfbh9jekewxq01k'
+                                                value={YouHuaContent}
+                                                //onEditorChange={handleEditorChange}
+                                                init={{
+                                                    mode : "textareas",
+                                                    language: 'zh_CN',
+                                                    height: '300px',
+                                                    branding: false,
+                                                    elementpath: false,
+                                                    menubar: false,
+                                                    plugins: [
+                                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                                        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                                                    ],
+                                                    toolbar: false,
+                                                    readonly: true,
+                                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+                                                }}
+                                            />
+                                            <Button
+                                                sx={{marginTop:'6px', width: '100%', height: '100%' }}
+                                                variant="contained"
+                                                onClick={youhua}
+                                            //startIcon={<CloudUploadIcon />}
+                                            >
+                                                重新优化
+                                            </Button>
+                                        </>
+                                        :
+                                        <>
+                                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                <CircularProgress />
+                                            </div>
+                                            <div style={{ padding: '10px', display: 'flex', justifyContent: 'center' }}>优化中...</div>
+                                        </>
+                                }
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenDialogYouHua(false)} color="primary">
+                                    取消
+                                </Button>
+                                <Button onClick={() => {
+                                    setOpenDialogYouHua(false)
+                                    setContent(YouHuaContent)
+                                }} color="primary">
+                                    应用
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </CardContent>
                     <CardActions sx={{ float: "right" }}>
                         <Button onClick={addBtn} size="small">提交</Button>

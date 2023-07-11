@@ -1,3 +1,4 @@
+import { AigcApi } from './../../api/api/thgamejam/chatgpt/aigcApi';
 import axios from "axios";
 import { UserApi } from "@api/api/thgamejam/user/userApi.ts";
 import { CompetitionApi } from "@api/api/thgamejam/competition/competitionApi.ts";
@@ -55,6 +56,7 @@ export const teamApi = new TeamApi(customSend, fromRequest, fromResponse);
 
 export const workApi = new WorksApi(customSend, fromRequest, fromResponse);
 
+export const aigcApi = new AigcApi(customSend, fromRequest, fromResponse);
 // 读取文件并计算哈希值
 export async function calculateFileHash(file: File): Promise<string> {
     const buffer = await file.arrayBuffer();
