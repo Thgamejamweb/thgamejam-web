@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
-import { userApi } from "@/http/http_api";
+import { competitionApi, userApi } from "@/http/http_api";
 import { useNavigate } from 'react-router-dom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { IconButton } from '@material-ui/core';
@@ -38,11 +38,17 @@ const useStyles = makeStyles((theme) => ({
 export default function NavBar() {
     const classes = useStyles();
     const [status, setStatus] = React.useState(0);
+    const [status0, setStatus0] = React.useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
         userApi.getUserTokenInfoWithoutError(undefined).then(req => {
             setStatus(1);
+        })
+        userApi.getUserTokenInfoWithoutError(undefined).then(req => {
+            competitionApi.getUserIsStaff(undefined).then(req => {
+                setStatus0(1)
+            })
         })
     }, [])
 
@@ -87,12 +93,20 @@ export default function NavBar() {
                                     发布比赛
                                 </Link>
                             </nav>
-                            <Button href="/user" color="primary" variant="outlined" className={classes.link}>
-                                用户中心
-                            </Button>
-                            <IconButton onClick={deleteUserToken} className={classes.link} aria-label="delete">
-                                <ExitToAppIcon fontSize='large' />
-                            </IconButton>
+                            {
+                                status0 == 0
+                                    ?
+                                    <></>
+                                    :
+                                    <>
+                                        <Button href="/user" color="primary" variant="outlined" className={classes.link}>
+                                            用户中心
+                                        </Button>
+                                        <IconButton onClick={deleteUserToken} className={classes.link} aria-label="delete">
+                                            <ExitToAppIcon fontSize='large' />
+                                        </IconButton>
+                                    </>
+                            }
                         </>
                 }
             </Toolbar>
