@@ -334,7 +334,7 @@ export default function Home() {
                 <Grid container spacing={2}>
                     {teamJoinWorksList?.workList && teamJoinWorksList?.workList.map((item) => {
                         return (
-                            <ItemCard name={item.workName} id={item.id} image={item.headerImageURL} staffName={''} description={''}></ItemCard>
+                            <ItemCard state={0} name={item.workName} id={item.id} image={item.headerImageURL} staffName={''} description={''}></ItemCard>
                         )
                     })}
                 </Grid>
